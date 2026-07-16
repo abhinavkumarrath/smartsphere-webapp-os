@@ -61,8 +61,7 @@ export function WindowContainer({
       animate={{
         opacity: isMinimized ? 0 : 1,
         scale: isMinimized ? 0.8 : 1,
-        x: (effectiveMaximized && !isMinimized) ? 0 : undefined,
-        y: isMinimized ? (typeof window !== 'undefined' ? window.innerHeight : 0) : (effectiveMaximized ? 0 : undefined),
+        y: isMinimized ? (typeof window !== 'undefined' ? window.innerHeight : 0) : undefined,
         zIndex: isActive ? 50 : 10
       }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
@@ -70,7 +69,7 @@ export function WindowContainer({
       className={cn(
         "absolute flex flex-col retro-window pointer-events-auto",
         effectiveMaximized 
-          ? "inset-2 sm:inset-4 !w-auto !h-auto max-w-none bottom-20 sm:bottom-28" 
+          ? "!fixed !inset-0 !w-auto !h-auto !transform-none !m-0 !rounded-none !border-0 !shadow-none" 
           : cn(width, height),
         isMinimized ? "pointer-events-none" : ""
       )}
