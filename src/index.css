@@ -39,15 +39,39 @@
   --border-dark: #1D1D1D; /* Strong black borders */
 }
 
-/* Theme switching doesn't really apply in neo-brutalist, but we can override accents */
+/* Theme switching overrides */
 [data-theme="hacker-green"] {
+  --bg-main: #E2F0E5;
   --accent-blue: var(--accent-green);
+  --border-dark: #0A2E1C;
 }
 [data-theme="synthwave-pink"] {
-  --accent-blue: #FF3B8D;
+  --bg-main: #F0E1E6;
+  --accent-blue: #F23C34;
+  --border-dark: #2E0A16;
 }
 [data-theme="retro-amber"] {
+  --bg-main: #FFF8E7;
   --accent-blue: var(--accent-yellow);
+  --border-dark: #2E220A;
+}
+[data-theme="cyber-cyan"] {
+  --bg-main: #F0EBE1;
+  --accent-blue: #3061FF;
+}
+
+/* CRT Scanline Overlay */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 4px;
+  opacity: 0.8;
 }
 
 @layer base {
