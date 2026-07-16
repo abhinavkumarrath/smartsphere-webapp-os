@@ -1,6 +1,6 @@
 import os
 import glob
-from PIL import Image
+from PIL import Image, ImageOps
 import pillow_heif
 
 # Register HEIF opener
@@ -40,6 +40,9 @@ def optimize_images(src_dir, dest_dir):
                 continue
 
             with Image.open(file_path) as img:
+                # Apply EXIF rotation to ensure vertical photos aren't saved sideways
+                img = ImageOps.exif_transpose(img)
+                
                 # Convert to RGB if necessary (e.g. RGBA for PNG)
                 if img.mode in ("RGBA", "P", "CMYK"):
                     img = img.convert("RGB")
