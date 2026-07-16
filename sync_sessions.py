@@ -30,21 +30,26 @@ def get_files_in_folder(folder_id):
             
     return files
 
-def download_file(file_id, dest_path):
-    url = f"https://www.googleapis.com/drive/v3/files/{file_id}"
-    params = {
-        "key": API_KEY,
-        "alt": "media"
-    }
-    response = requests.get(url, params=params, stream=True)
-    if response.status_code == 200:
-        with open(dest_path, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        return True
-    else:
-        print(f"Failed to download {file_id}: {response.text}")
-        return False
+import time
+import subprocess
+
+def download_file(file_id, dest_path, retries=3):
+    for attempt in range(retries):
+        try:
+            # We use gdown instead of requests to bypass Google's strict API anti-bot blocks on large media files
+            result = subprocess.run(
+                ["gdown", file_id, "-O", dest_path],
+                check=True,
+                capture_output=True,
+                text=True
+            )
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Attempt {attempt+1} failed to download {file_id}. gdown error: {e.stderr}")
+            time.sleep(2 * (attempt + 1))
+            
+    print(f"Failed to download {file_id} after {retries} attempts.")
+    return False
 
 def sync_folder(folder_id, local_path, is_web_folder=False):
     if not os.path.exists(local_path):
