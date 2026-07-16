@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Terminal, Cpu, Users, CalendarDays, Rocket, ClipboardList } from 'lucide-react';
+import { Cpu, Users, CalendarDays, Rocket, ClipboardList } from 'lucide-react';
 import { cn } from './lib/utils';
 import { AnimatedIoTBackground } from './components/AnimatedIoTBackground';
 import { WindowContainer } from './components/WindowContainer';

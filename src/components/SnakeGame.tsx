@@ -16,7 +16,7 @@ export function SnakeGame() {
   const [highScore, setHighScore] = useState(0);
 
   const generateFood = useCallback(() => {
-    let newFood;
+    let newFood: { x: number, y: number };
     while (true) {
       newFood = {
         x: Math.floor(Math.random() * GRID_SIZE),

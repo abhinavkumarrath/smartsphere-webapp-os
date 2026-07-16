@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Lightbulb, Plug, Bot, Cctv } from 'lucide-react';
 
 export const LightBulbIcon = ({ className }: { className?: string }) => (

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, Cpu, Users, CalendarDays, Rocket, ClipboardList, Music, Calendar, Gamepad2, Settings } from 'lucide-react';
+import { Cpu, Users, CalendarDays, Rocket, ClipboardList, Music, Calendar, Gamepad2, Settings } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export interface WindowState {
@@ -18,7 +18,7 @@ interface TaskbarProps {
   onOpenWindow?: (id: string) => void;
 }
 
-export function Taskbar({ windows, toggleMinimize, theme = 'dark', toggleTheme, onOpenWindow }: TaskbarProps) {
+export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps) {
   const [time, setTime] = useState(new Date());
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const startMenuRef = useRef<HTMLDivElement>(null);

@@ -1,5 +1,5 @@
 import { useSettings } from './SettingsContext';
-import { Settings, Monitor, Palette } from 'lucide-react';
+import { Monitor, Palette } from 'lucide-react';
 
 export function ControlPanel() {
   const { colorTheme, setColorTheme, crtEnabled, setCrtEnabled } = useSettings();

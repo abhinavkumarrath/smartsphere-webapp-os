@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2, Music as MusicIcon, Disc3 } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Music as MusicIcon, Disc3 } from 'lucide-react';
 
 const PLAYLIST = [
   { id: 1, title: 'Chill Vibes', artist: 'Lofi Maker', duration: '6:12', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
