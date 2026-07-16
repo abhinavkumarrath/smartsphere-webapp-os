@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Cpu, Users, CalendarDays, Rocket, ClipboardList, Music, Calendar, Gamepad2, Settings } from 'lucide-react';
+import { Cpu, Users, CalendarDays, Rocket, ClipboardList, Music, Calendar, Gamepad2, UserCircle2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export interface WindowState {
@@ -88,8 +88,8 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
             <button onClick={() => handleStartMenuClick('music')} className="flex items-center gap-3 p-4 border-2 border-transparent hover:border-black hover:bg-primary-yellow transition-colors text-left text-base text-black font-bold">
               <Music size={24} strokeWidth={2.5} /> Music Player
             </button>
-            <button onClick={() => handleStartMenuClick('control')} className="flex items-center gap-3 p-4 border-2 border-transparent hover:border-black hover:bg-primary-cyan transition-colors text-left text-base text-black font-bold">
-              <Settings size={24} strokeWidth={2.5} /> Control Panel
+            <button onClick={() => handleStartMenuClick('profile')} className="flex items-center gap-3 p-4 border-2 border-transparent hover:border-black hover:bg-primary-cyan transition-colors text-left text-base text-black font-bold">
+              <UserCircle2 size={24} strokeWidth={2.5} /> Profile
             </button>
             <button onClick={() => handleStartMenuClick('snake')} className="flex items-center gap-3 p-4 border-2 border-transparent hover:border-black hover:bg-primary-green transition-colors text-left text-base text-black font-bold">
               <Gamepad2 size={24} strokeWidth={2.5} /> Games
@@ -123,7 +123,7 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
               case 'projects': return <Rocket size={20} strokeWidth={2.5} />;
               case 'calendar': return <Calendar size={20} strokeWidth={2.5} />;
               case 'music': return <Music size={20} strokeWidth={2.5} />;
-              case 'control': return <Settings size={20} strokeWidth={2.5} />;
+              case 'profile': return <UserCircle2 size={20} strokeWidth={2.5} />;
               case 'snake': return <Gamepad2 size={20} strokeWidth={2.5} />;
               case 'registration': return <ClipboardList size={20} strokeWidth={2.5} />;
               default: return null;

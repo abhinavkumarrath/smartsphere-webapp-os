@@ -13,10 +13,10 @@ import { BootScreen } from './components/BootScreen';
 import { CalendarApp } from './components/CalendarApp';
 import { MusicPlayer } from './components/MusicPlayer';
 import { LoginScreen } from './components/LoginScreen';
-import { ControlPanel } from './components/ControlPanel';
+import { ProfileWindow } from './components/ProfileWindow';
 import { SnakeGame } from './components/SnakeGame';
 import { RegistrationWindow } from './components/RegistrationWindow';
-import { Music, Calendar, Settings, Gamepad2 } from 'lucide-react';
+import { Music, Calendar, Gamepad2, UserCircle2 } from 'lucide-react';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
@@ -30,7 +30,7 @@ function App() {
     { id: 'projects', title: 'INNOVATIONS', isOpen: false, isMinimized: false, isActive: false },
     { id: 'calendar', title: 'EVENTS', isOpen: false, isMinimized: false, isActive: false },
     { id: 'music', title: 'BEATS', isOpen: false, isMinimized: false, isActive: false },
-    { id: 'control', title: 'SETTINGS', isOpen: false, isMinimized: false, isActive: false },
+    { id: 'profile', title: 'PROFILE', isOpen: false, isMinimized: false, isActive: false },
     { id: 'snake', title: 'SNAKE', isOpen: false, isMinimized: false, isActive: false },
     { id: 'registration', title: 'REGISTRATION', isOpen: false, isMinimized: false, isActive: false },
   ]);
@@ -132,11 +132,11 @@ function App() {
           <span className="text-black text-[10px] font-bold px-1 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Events</span>
         </button>
 
-        <button onDoubleClick={() => openWindow('control')} onClick={() => openWindow('control')} className="flex flex-col items-center gap-2 group w-full">
+        <button onDoubleClick={() => openWindow('profile')} onClick={() => openWindow('profile')} className="flex flex-col items-center gap-2 group w-full">
           <div className="w-12 h-12 bg-primary-cyan border-2 border-black flex items-center justify-center text-black transition-all shadow-[4px_4px_0px_0px_#000]">
-            <Settings className="w-6 h-6" strokeWidth={2.5} />
+            <UserCircle2 className="w-6 h-6" strokeWidth={2.5} />
           </div>
-          <span className="text-black text-[10px] font-bold px-1 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Settings</span>
+          <span className="text-black text-[10px] font-bold px-1 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Profile</span>
         </button>
 
         <button onDoubleClick={() => openWindow('inventory')} onClick={() => openWindow('inventory')} className="flex flex-col items-center gap-2 group w-full">
@@ -205,11 +205,11 @@ function App() {
           <span className="text-black text-xs font-bold px-2 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Events</span>
         </button>
 
-        <button onDoubleClick={() => openWindow('control')} onClick={() => openWindow('control')} className="flex flex-col items-center gap-2 group w-24">
+        <button onDoubleClick={() => openWindow('profile')} onClick={() => openWindow('profile')} className="flex flex-col items-center gap-2 group w-24">
           <div className="w-16 h-16 bg-primary-cyan border-2 border-black flex items-center justify-center text-black transition-all shadow-[4px_4px_0px_0px_#000] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_#000] group-active:translate-x-[4px] group-active:translate-y-[4px] group-active:shadow-none">
-            <Settings size={28} strokeWidth={2.5} />
+            <UserCircle2 size={28} strokeWidth={2.5} />
           </div>
-          <span className="text-black text-xs font-bold px-2 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Settings</span>
+          <span className="text-black text-xs font-bold px-2 py-1 bg-white border-2 border-black shadow-[2px_2px_0px_0px_#000] truncate w-full text-center">Profile</span>
         </button>
       </div>
 
@@ -281,8 +281,8 @@ function App() {
           <MusicPlayer />
         </WindowContainer>
 
-        <WindowContainer {...getWindowProps('control')} icon={<Settings size={18} />} defaultPosition={{ x: 30, y: 40 }} width="w-[95vw] max-w-lg">
-          <ControlPanel />
+        <WindowContainer {...getWindowProps('profile')} icon={<UserCircle2 size={18} />} defaultPosition={{ x: 30, y: 40 }} width="w-[95vw] max-w-2xl">
+          <ProfileWindow />
         </WindowContainer>
 
         <WindowContainer {...getWindowProps('snake')} icon={<Gamepad2 size={18} />} defaultPosition={{ x: 20, y: 30 }} width="w-[95vw] max-w-md">
