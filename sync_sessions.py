@@ -46,38 +46,38 @@ def download_file(file_id, dest_path):
         print(f"Failed to download {file_id}: {response.text}")
         return False
 
-def sync_folder(folder_id, local_path, max_files=3):
+def sync_folder(folder_id, local_path, is_web_folder=False):
     if not os.path.exists(local_path):
         os.makedirs(local_path)
         
     print(f"Scanning folder: {local_path}")
     items = get_files_in_folder(folder_id)
     
-    downloaded_files_count = 0
     for item in items:
-        item_path = os.path.join(local_path, item["name"].strip())
+        folder_name = item["name"].strip()
+        item_path = os.path.join(local_path, folder_name)
         
         if item["mimeType"] == "application/vnd.google-apps.folder":
-            sync_folder(item["id"], item_path, max_files)
+            is_sub_web = (folder_name.lower() == "web")
+            # If we are already in a web folder, all subfolders are also treated as web folders
+            sync_folder(item["id"], item_path, is_web_folder=(is_web_folder or is_sub_web))
         else:
-            if downloaded_files_count >= max_files:
+            if not is_web_folder:
                 continue
                 
-            # Check if it's an image or common video format, although optimize_images.py will filter later.
             # To save time, we only download if it doesn't exist
             if not os.path.exists(item_path):
                 print(f"Downloading new file: {item['name']} to {item_path}")
                 download_file(item["id"], item_path)
             else:
                 pass # File already exists locally, skip to save time and bandwidth
-            downloaded_files_count += 1
 
 if __name__ == "__main__":
     print("=======================================")
     print("Starting Google Drive Sync...")
     print("=======================================")
     try:
-        sync_folder(ROOT_FOLDER_ID, DOWNLOAD_ROOT, max_files=3)
+        sync_folder(ROOT_FOLDER_ID, DOWNLOAD_ROOT)
         print("\n=======================================")
         print("Sync complete! Running optimize_images.py...")
         print("=======================================")
