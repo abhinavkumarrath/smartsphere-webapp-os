@@ -13,12 +13,12 @@ const PROJECTS = [
   },
   {
     id: 2,
-    title: 'Safelet',
+    title: 'Sentinelle',
     status: 'Completed',
     progress: 100,
     techStack: ['TypeScript', 'React Native', 'IoT', 'AWS'],
     description: 'A personal safety wearable device and companion application by Team Onyx.',
-    repo: 'https://github.com/abhinavkumarrath/Safelet',
+    repo: 'https://github.com/abhinavkumarrath/Sentinelle',
     color: 'bg-primary-cyan'
   }
 ];
