@@ -182,7 +182,7 @@ export function SessionsWindow() {
                     {images.map((filename, idx) => (
                       <div key={idx} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] overflow-hidden group">
                         <img 
-                          src={`/images/sessions/${sessionTitle}/${filename}`} 
+                          src={encodeURI(`/images/sessions/${sessionTitle}/${filename}`)} 
                           alt={`Session Photo ${idx + 1}`}
                           className="w-full h-64 object-cover border-b-4 border-black group-hover:scale-105 transition-transform duration-300"
                         />
