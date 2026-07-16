@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Folder, FileCode2, Image as ImageIcon, ChevronRight } from 'lucide-react';
+import sessionsManifest from '../data/sessions_manifest.json';
 
 const SESSIONS = [
   {
@@ -129,7 +130,7 @@ export function SessionsWindow() {
                       <ImageIcon size={32} strokeWidth={2.5} />
                     </div>
                     <span className="text-lg font-black text-black uppercase">Photo Gallery</span>
-                    <span className="text-sm font-bold text-gray-700">View Drive Folder</span>
+                    <span className="text-sm font-bold text-gray-700">View Optimized Photos</span>
                   </button>
                 </div>
               </div>
@@ -145,12 +146,14 @@ export function SessionsWindow() {
         )}
       </div>
 
-      {/* Google Drive Gallery Modal */}
+      {/* Photo Gallery Modal */}
       {isGalleryOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-8">
           <div className="bg-white border-4 border-black w-full max-w-6xl h-full shadow-[8px_8px_0px_0px_#000] flex flex-col">
             <div className="flex justify-between items-center p-4 border-b-4 border-black bg-primary-yellow">
-              <h3 className="font-black text-xl uppercase tracking-widest">SmartSphere Photo Gallery</h3>
+              <h3 className="font-black text-xl uppercase tracking-widest">
+                {SESSIONS.find(s => s.id === activeSession)?.title} - Photo Gallery
+              </h3>
               <button 
                 onClick={() => setIsGalleryOpen(false)}
                 className="font-black text-xl hover:text-white transition-colors px-4 border-2 border-black bg-white hover:bg-black p-1 shadow-[2px_2px_0px_0px_#000]"
@@ -158,13 +161,36 @@ export function SessionsWindow() {
                 CLOSE [X]
               </button>
             </div>
-            <div className="flex-1 bg-surface-alt relative p-4">
-              <iframe 
-                src="https://drive.google.com/embeddedfolderview?id=1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j#grid" 
-                className="w-full h-full border-4 border-black bg-white"
-                frameBorder="0"
-                title="SmartSphere Photos"
-              />
+            <div className="flex-1 bg-surface-alt p-6 overflow-y-auto custom-scrollbar">
+              {(() => {
+                const sessionTitle = SESSIONS.find(s => s.id === activeSession)?.title;
+                const images = sessionTitle ? (sessionsManifest as Record<string, string[]>)[sessionTitle] || [] : [];
+                
+                if (images.length === 0) {
+                  return (
+                    <div className="h-full flex items-center justify-center text-black text-xl font-black border-4 border-dashed border-black p-8 text-center uppercase tracking-widest bg-white shadow-[8px_8px_0px_0px_#000]">
+                      <div className="flex flex-col items-center gap-6">
+                        <ImageIcon size={48} strokeWidth={2} />
+                        <p>No photos have been<br/>synced for this session yet.</p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {images.map((filename, idx) => (
+                      <div key={idx} className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000] overflow-hidden group">
+                        <img 
+                          src={`/images/sessions/${sessionTitle}/${filename}`} 
+                          alt={`Session Photo ${idx + 1}`}
+                          className="w-full h-64 object-cover border-b-4 border-black group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
