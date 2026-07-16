@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Loader2, UserCircle2 } from 'lucide-react';
-import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from './AuthContext';
 
 interface LoginScreenProps {
@@ -9,38 +8,21 @@ interface LoginScreenProps {
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
   const [isVerifying, setIsVerifying] = useState(false);
-  const { login } = useAuth();
+  const { signInWithGoogle } = useAuth();
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      setIsVerifying(true);
-      try {
-        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        });
-        const decoded = await res.json();
-        login({
-          id: decoded.sub,
-          name: decoded.name,
-          email: decoded.email,
-          picture: decoded.picture,
-          role: 'Club Member',
-          joinDate: new Date().toLocaleDateString()
-        });
-        // Simulate small delay for aesthetics
-        setTimeout(() => {
-          onLogin();
-        }, 800);
-      } catch (err) {
-        console.error('Failed to fetch user info', err);
-        setIsVerifying(false);
-      }
-    },
-    onError: () => {
-      console.error('Login Failed');
+  const handleGoogleLogin = async () => {
+    setIsVerifying(true);
+    try {
+      await signInWithGoogle();
+      // Simulate small delay for aesthetics before unlocking OS
+      setTimeout(() => {
+        onLogin();
+      }, 800);
+    } catch (err) {
+      console.error('Login Failed', err);
       setIsVerifying(false);
     }
-  });
+  };
 
   const handleGuestAccess = () => {
     setIsVerifying(true);
@@ -83,7 +65,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             </div>
             
             <button 
-              onClick={() => googleLogin()}
+              onClick={handleGoogleLogin}
               className="w-full flex items-center justify-center gap-3 bg-white border-4 border-black py-3 font-black text-lg shadow-[4px_4px_0px_0px_#000] hover:bg-surface-alt active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
             >
               <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">

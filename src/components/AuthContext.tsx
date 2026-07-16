@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import { auth, googleProvider } from '../lib/firebase';
+import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebase/auth';
 
 export interface UserProfile {
   id: string;
@@ -12,44 +14,60 @@ export interface UserProfile {
 
 interface AuthContextType {
   user: UserProfile | null;
-  login: (profile: UserProfile) => void;
-  logout: () => void;
+  signInWithGoogle: () => Promise<void>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load session from local storage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('smartsphere_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.error("Failed to parse user session");
-        localStorage.removeItem('smartsphere_user');
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
+      if (firebaseUser) {
+        setUser({
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName || 'Unknown User',
+          email: firebaseUser.email || '',
+          picture: firebaseUser.photoURL || '',
+          role: 'Club Member',
+          joinDate: new Date(firebaseUser.metadata.creationTime || Date.now()).toLocaleDateString()
+        });
+      } else {
+        setUser(null);
       }
-    }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = (profile: UserProfile) => {
-    setUser(profile);
-    localStorage.setItem('smartsphere_user', JSON.stringify(profile));
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      throw error;
+    }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('smartsphere_user');
-    localStorage.removeItem('smartsphere_is_logged_in');
-    window.location.reload();
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem('smartsphere_is_logged_in');
+      window.location.reload();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
-      {children}
+    <AuthContext.Provider value={{ user, signInWithGoogle, logout, isAuthenticated: !!user, isLoading }}>
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }

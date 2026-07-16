@@ -1,49 +1,20 @@
 import { useAuth } from './AuthContext';
-import { useGoogleLogin } from '@react-oauth/google';
 import { LogOut, UserCircle2, Award, Terminal, Code2, Cpu, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function ProfileWindow() {
-  const { user, login, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, signInWithGoogle } = useAuth();
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      setIsVerifying(true);
-      try {
-        const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        });
-        const decoded = await res.json();
-        login({
-          id: decoded.sub,
-          name: decoded.name,
-          email: decoded.email,
-          picture: decoded.picture,
-          role: 'Club Member',
-          joinDate: new Date().toLocaleDateString()
-        });
-        setIsVerifying(false);
-      } catch (err) {
-        console.error('Failed to fetch user info', err);
-        setIsVerifying(false);
-      }
-    },
-    onError: () => {
-      console.error('Login Failed');
+  const handleGoogleLogin = async () => {
+    setIsVerifying(true);
+    try {
+      await signInWithGoogle();
+      setIsVerifying(false);
+    } catch (err) {
+      console.error('Login Failed', err);
       setIsVerifying(false);
     }
-  });
-
-  const handleMockLogin = () => {
-    login({
-      id: 'mock_123',
-      name: 'Abhinav Patel',
-      email: 'abhinav@smartsphere.club',
-      picture: 'https://api.dicebear.com/7.x/pixel-art/svg?seed=abhinav',
-      role: 'Core Team Member',
-      joinDate: new Date().toLocaleDateString()
-    });
   };
 
   if (!isAuthenticated || !user) {
@@ -71,7 +42,7 @@ export function ProfileWindow() {
               </div>
             ) : (
               <button 
-                onClick={() => googleLogin()}
+                onClick={handleGoogleLogin}
                 className="w-full flex items-center justify-center gap-3 bg-white border-4 border-black py-3 mt-4 font-black text-lg shadow-[4px_4px_0px_0px_#000] hover:bg-surface-alt active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
               >
                 <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
@@ -85,16 +56,6 @@ export function ProfileWindow() {
                 Sign in with Google
               </button>
             )}
-
-            <div className="mt-8 flex flex-col items-center gap-2 border-t-2 border-dashed border-gray-400 pt-8 w-full">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Developer Tools</span>
-              <button 
-                onClick={handleMockLogin}
-                className="px-6 py-2 bg-black text-white font-bold border-2 border-black hover:bg-gray-800 transition-colors"
-              >
-                Mock Login (Bypass Auth)
-              </button>
-            </div>
           </div>
         </div>
       </div>
