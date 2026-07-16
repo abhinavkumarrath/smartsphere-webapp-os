@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSettings } from './SettingsContext';
+// SettingsContext unused
 
 interface Command {
   input: string;
@@ -11,7 +11,7 @@ interface TerminalWindowProps {
 }
 
 export function TerminalWindow({ onRegisterOpen }: TerminalWindowProps) {
-  const { crtEnabled } = useSettings();
+  // Removed crtEnabled
   const [history, setHistory] = useState<Command[]>([
     { 
       input: 'systemctl status smartsphere', 
@@ -105,7 +105,7 @@ export function TerminalWindow({ onRegisterOpen }: TerminalWindowProps) {
 
   return (
     <div 
-      className={`bg-black h-full p-4 font-mono text-sm overflow-y-auto custom-scrollbar flex flex-col ${crtEnabled ? 'crt-scanline' : ''}`}
+      className="bg-black h-full p-4 font-mono text-sm overflow-y-auto custom-scrollbar flex flex-col"
       onClick={() => inputRef.current?.focus()}
     >
       <div className="text-primary-yellow font-bold border-b-2 border-primary-yellow pb-2 mb-4">

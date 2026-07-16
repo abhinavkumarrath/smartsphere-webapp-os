@@ -1,5 +1,5 @@
 import { useSettings } from './SettingsContext';
-import { Monitor, Palette } from 'lucide-react';
+import { Palette } from 'lucide-react';
 
 export function ControlPanel() {
   const { colorTheme, setColorTheme } = useSettings();
@@ -44,12 +44,9 @@ export function ControlPanel() {
                 <span>{theme.name}</span>
               </button>
             ))}
-          </div>
         </div>
-
-        </div>
-        
       </div>
+    </div>
     </div>
   );
 }
