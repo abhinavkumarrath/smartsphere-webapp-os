@@ -8,6 +8,7 @@ const SESSIONS = [
     date: '2023-09-10',
     description: 'Blinking LEDs, reading digital inputs, and understanding GPIOs on Arduino.',
     repo: 'github.com/smartsphere/session1-intro',
+    driveLink: '#', // Replace with actual Google Drive link
     photos: 5
   },
   {
@@ -16,6 +17,7 @@ const SESSIONS = [
     date: '2023-09-24',
     description: 'Interfacing ultrasonic sensors, LDRs, and basic I2C communication.',
     repo: 'github.com/smartsphere/session2-sensors',
+    driveLink: '#', // Replace with actual Google Drive link
     photos: 12
   },
   {
@@ -24,6 +26,7 @@ const SESSIONS = [
     date: '2023-10-08',
     description: 'Setting up WiFi, creating a simple web server, and REST API basics.',
     repo: 'github.com/smartsphere/session3-wifi',
+    driveLink: '#', // Replace with actual Google Drive link
     photos: 8
   },
   {
@@ -32,6 +35,7 @@ const SESSIONS = [
     date: '2023-10-22',
     description: 'Publishing and subscribing to MQTT topics using AWS IoT Core.',
     repo: 'github.com/smartsphere/session4-mqtt',
+    driveLink: '#', // Replace with actual Google Drive link
     photos: 15
   }
 ];
@@ -87,13 +91,18 @@ export function SessionsWindow() {
                     <span className="text-sm font-bold text-gray-700 truncate w-full text-center px-2">{session.repo}</span>
                   </div>
                   
-                  <div className="bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-red transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none">
+                  <a 
+                    href={session.driveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-red transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                  >
                     <div className="bg-black p-4 text-white">
                       <ImageIcon size={32} strokeWidth={2.5} />
                     </div>
                     <span className="text-lg font-black text-black uppercase">Photo Gallery</span>
-                    <span className="text-sm font-bold text-gray-700">{session.photos} images</span>
-                  </div>
+                    <span className="text-sm font-bold text-gray-700">View Drive Folder</span>
+                  </a>
                 </div>
               </div>
             ))}
