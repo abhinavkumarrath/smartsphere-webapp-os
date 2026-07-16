@@ -4,44 +4,72 @@ import { Folder, FileCode2, Image as ImageIcon, ChevronRight } from 'lucide-reac
 const SESSIONS = [
   {
     id: 1,
-    title: 'Session 1: Introduction to Microcontrollers',
-    date: '2023-09-10',
-    description: 'Blinking LEDs, reading digital inputs, and understanding GPIOs on Arduino.',
-    repo: 'github.com/smartsphere/session1-intro',
-    driveLink: '#', // Replace with actual Google Drive link
-    photos: 5
+    title: 'Club Launch (16 May)',
+    date: '16 May',
+    description: 'The official launch event of the SmartSphere Club.',
+    repo: null,
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
   },
   {
     id: 2,
-    title: 'Session 2: Sensor Integration (Analog & Digital)',
-    date: '2023-09-24',
-    description: 'Interfacing ultrasonic sensors, LDRs, and basic I2C communication.',
-    repo: 'github.com/smartsphere/session2-sensors',
-    driveLink: '#', // Replace with actual Google Drive link
-    photos: 12
+    title: 'Session 1 (23 May)',
+    date: '23 May',
+    description: 'First technical session of the club.',
+    repo: 'github.com/smartsphere/session1-intro',
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
   },
   {
     id: 3,
-    title: 'Session 3: Wireless Communication (ESP32)',
-    date: '2023-10-08',
-    description: 'Setting up WiFi, creating a simple web server, and REST API basics.',
-    repo: 'github.com/smartsphere/session3-wifi',
-    driveLink: '#', // Replace with actual Google Drive link
-    photos: 8
+    title: 'Session 2 (30 May)',
+    date: '30 May',
+    description: 'Second technical session.',
+    repo: 'github.com/smartsphere/session2-sensors',
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
   },
   {
     id: 4,
-    title: 'Session 4: MQTT & Cloud IoT Platforms',
-    date: '2023-10-22',
-    description: 'Publishing and subscribing to MQTT topics using AWS IoT Core.',
+    title: 'Session 3 [PP] (6 Jun)',
+    date: '6 Jun',
+    description: 'Third technical session with project presentations.',
+    repo: 'github.com/smartsphere/session3-wifi',
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
+  },
+  {
+    id: 5,
+    title: 'Session 4 [PP] (13 Jun)',
+    date: '13 Jun',
+    description: 'Fourth technical session with project presentations.',
     repo: 'github.com/smartsphere/session4-mqtt',
-    driveLink: '#', // Replace with actual Google Drive link
-    photos: 15
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
+  },
+  {
+    id: 6,
+    title: 'Core Team Recruitment (4 July)',
+    date: '4 Jul',
+    description: 'Recruitment drive for the core team members.',
+    repo: null,
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
+  },
+  {
+    id: 7,
+    title: 'Review 4th Sem',
+    date: '11 Jul',
+    description: 'Review session for the 4th semester.',
+    repo: null,
+    driveLink: 'https://drive.google.com/drive/u/1/folders/1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j',
+    photos: 0
   }
 ];
 
 export function SessionsWindow() {
   const [activeSession, setActiveSession] = useState<number | null>(null);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   return (
     <div className="flex h-full min-h-[500px] font-sans bg-white">
@@ -83,26 +111,26 @@ export function SessionsWindow() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 mt-auto">
-                  <div className="bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-yellow transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none">
-                    <div className="bg-black p-4 text-white">
-                      <FileCode2 size={32} strokeWidth={2.5} />
+                  {session.repo && (
+                    <div className="bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-yellow transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none">
+                      <div className="bg-black p-4 text-white">
+                        <FileCode2 size={32} strokeWidth={2.5} />
+                      </div>
+                      <span className="text-lg font-black text-black uppercase">Source Code</span>
+                      <span className="text-sm font-bold text-gray-700 truncate w-full text-center px-2">{session.repo}</span>
                     </div>
-                    <span className="text-lg font-black text-black uppercase">Source Code</span>
-                    <span className="text-sm font-bold text-gray-700 truncate w-full text-center px-2">{session.repo}</span>
-                  </div>
+                  )}
                   
-                  <a 
-                    href={session.driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-red transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                  <button 
+                    onClick={() => setIsGalleryOpen(true)}
+                    className={`bg-white border-4 border-black p-6 flex flex-col items-center justify-center gap-4 hover:bg-primary-red transition-all cursor-pointer shadow-[8px_8px_0px_0px_#000] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none ${!session.repo ? 'col-span-2' : ''}`}
                   >
                     <div className="bg-black p-4 text-white">
                       <ImageIcon size={32} strokeWidth={2.5} />
                     </div>
                     <span className="text-lg font-black text-black uppercase">Photo Gallery</span>
                     <span className="text-sm font-bold text-gray-700">View Drive Folder</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -116,6 +144,31 @@ export function SessionsWindow() {
           </div>
         )}
       </div>
+
+      {/* Google Drive Gallery Modal */}
+      {isGalleryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-8">
+          <div className="bg-white border-4 border-black w-full max-w-6xl h-full shadow-[8px_8px_0px_0px_#000] flex flex-col">
+            <div className="flex justify-between items-center p-4 border-b-4 border-black bg-primary-yellow">
+              <h3 className="font-black text-xl uppercase tracking-widest">SmartSphere Photo Gallery</h3>
+              <button 
+                onClick={() => setIsGalleryOpen(false)}
+                className="font-black text-xl hover:text-white transition-colors px-4 border-2 border-black bg-white hover:bg-black p-1 shadow-[2px_2px_0px_0px_#000]"
+              >
+                CLOSE [X]
+              </button>
+            </div>
+            <div className="flex-1 bg-surface-alt relative p-4">
+              <iframe 
+                src="https://drive.google.com/embeddedfolderview?id=1id9oryx_QlQISRzUMJXwKfILdYuL1Q-j#grid" 
+                className="w-full h-full border-4 border-black bg-white"
+                frameBorder="0"
+                title="SmartSphere Photos"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
