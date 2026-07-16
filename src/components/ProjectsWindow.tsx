@@ -3,33 +3,23 @@ import { ExternalLink, GitBranch, Cpu } from 'lucide-react';
 const PROJECTS = [
   {
     id: 1,
-    title: 'Smart Agriculture System',
+    title: 'DefendX',
     status: 'In Progress',
-    progress: 65,
-    techStack: ['ESP32', 'LoRa', 'AWS IoT', 'React'],
-    description: 'A distributed sensor network for monitoring soil moisture, temperature, and automated irrigation via LoRaWAN.',
-    repo: 'https://github.com/smartsphere/smart-agri',
-    color: 'bg-primary-yellow'
+    progress: 85,
+    techStack: ['React', 'Node.js', 'Python', 'Machine Learning'],
+    description: 'An advanced cybersecurity monitoring and defense platform developed by Team Onyx.',
+    repo: 'https://github.com/abhinavkumarrath/DefendX',
+    color: 'bg-primary-red'
   },
   {
     id: 2,
-    title: 'Automated Lab Access Control',
+    title: 'Safelet',
     status: 'Completed',
     progress: 100,
-    techStack: ['Raspberry Pi', 'RFID', 'Python', 'PostgreSQL'],
-    description: 'RFID-based door lock system for the hardware lab with an attendance logging dashboard.',
-    repo: 'https://github.com/smartsphere/lab-access',
-    color: 'bg-primary-green'
-  },
-  {
-    id: 3,
-    title: 'Weather Station Mesh',
-    status: 'Planning',
-    progress: 15,
-    techStack: ['ESP8266', 'BME280', 'MQTT', 'Grafana'],
-    description: 'Campus-wide mesh network of weather stations reporting micro-climate data in real-time.',
-    repo: 'https://github.com/smartsphere/weather-mesh',
-    color: 'bg-primary-red'
+    techStack: ['TypeScript', 'React Native', 'IoT', 'AWS'],
+    description: 'A personal safety wearable device and companion application by Team Onyx.',
+    repo: 'https://github.com/abhinavkumarrath/Safelet',
+    color: 'bg-primary-cyan'
   }
 ];
 
