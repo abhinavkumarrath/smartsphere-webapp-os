@@ -52,8 +52,8 @@ const APPLY_LINK = "https://docs.google.com/forms/d/e/1FAIpQLSdSnWBCx4_4blbQ0Ctm
 
 export function TeamWindow() {
   return (
-    <div className="flex flex-col gap-10 font-sans p-6 bg-surface-alt h-full">
-      <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_#000]">
+    <div className="flex flex-col gap-6 sm:gap-10 font-sans p-3 sm:p-6 bg-surface-alt h-full">
+      <div className="bg-white border-4 border-black p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000]">
         <h1 className="text-4xl font-black uppercase tracking-tighter">Meet The Crew</h1>
         <p className="font-bold text-gray-700 mt-2">The brains behind SmartSphere.</p>
       </div>

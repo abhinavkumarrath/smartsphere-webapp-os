@@ -35,8 +35,8 @@ const PROJECTS = [
 
 export function ProjectsWindow() {
   return (
-    <div className="flex flex-col gap-8 font-sans p-6 bg-white h-full">
-      <div className="bg-primary-blue border-4 border-black p-6 shadow-[8px_8px_0px_0px_#000] flex justify-between items-end flex-wrap gap-4">
+    <div className="flex flex-col gap-4 sm:gap-8 font-sans p-3 sm:p-6 bg-white h-full overflow-y-auto custom-scrollbar">
+      <div className="bg-primary-blue border-4 border-black p-4 sm:p-6 shadow-[8px_8px_0px_0px_#000] flex justify-between items-end flex-wrap gap-4">
         <div>
           <h2 className="text-4xl font-black text-white tracking-tighter uppercase">R&D Showcase</h2>
           <p className="text-white font-bold mt-2 bg-black px-2 py-1 inline-block">Active & Completed Innovations.</p>

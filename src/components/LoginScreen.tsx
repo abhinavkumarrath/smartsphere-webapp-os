@@ -29,8 +29,8 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
   };
 
   return (
-    <div className="absolute inset-0 bg-background z-[50] flex flex-col items-center justify-center p-6 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz48L3N2Zz4=')]">
-      <div className="w-full max-w-sm bg-white border-4 border-black p-10 shadow-[8px_8px_0px_0px_#000] flex flex-col items-center transform transition-transform">
+    <div className="absolute inset-0 bg-background z-[50] flex flex-col items-center justify-center p-4 sm:p-6 font-sans bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4wNSkiLz48L3N2Zz4=')]">
+      <div className="w-full max-w-sm bg-white border-4 border-black p-6 sm:p-10 shadow-[8px_8px_0px_0px_#000] flex flex-col items-center transform transition-transform">
         
         <div className="w-24 h-24 border-4 border-black bg-primary-yellow p-1 shadow-[4px_4px_0px_0px_#000] mb-6 overflow-hidden">
           <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover border-2 border-black" />

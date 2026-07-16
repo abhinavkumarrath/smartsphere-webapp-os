@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { X, Minus, Square } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -33,7 +33,15 @@ export function WindowContainer({
   onMinimize,
   onFocus
 }: WindowContainerProps) {
-  const [isMaximized, setIsMaximized] = useState(true);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const toggleMaximize = () => {
     setIsMaximized(!isMaximized);
     if (!isActive) onFocus();
@@ -41,26 +49,29 @@ export function WindowContainer({
 
   if (!isOpen) return null;
 
+  const effectiveMaximized = isMaximized || isMobile;
+
   return (
     <motion.div
-      drag={!isMaximized}
-      dragConstraints={{ left: 0, right: window.innerWidth - 200, top: 0, bottom: window.innerHeight - 100 }}
+      drag={!effectiveMaximized}
+      dragConstraints={{ left: 0, right: typeof window !== 'undefined' ? window.innerWidth - 200 : 0, top: 0, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 0 }}
       dragMomentum={false}
       dragElastic={0}
       initial={{ opacity: 0, scale: 0.95, ...defaultPosition }}
       animate={{
         opacity: isMinimized ? 0 : 1,
         scale: isMinimized ? 0.8 : 1,
-        y: isMinimized ? window.innerHeight : undefined,
+        x: (effectiveMaximized && !isMinimized) ? 0 : undefined,
+        y: isMinimized ? (typeof window !== 'undefined' ? window.innerHeight : 0) : (effectiveMaximized ? 0 : undefined),
         zIndex: isActive ? 50 : 10
       }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       onPointerDown={onFocus}
       className={cn(
         "absolute flex flex-col retro-window pointer-events-auto",
-        isMaximized 
-          ? "!fixed !inset-0 !w-auto !h-auto !transform-none !m-0 !rounded-none !border-0 !shadow-none" 
-          : width,
+        effectiveMaximized 
+          ? "inset-2 sm:inset-4 !w-auto !h-auto max-w-none mb-16 sm:mb-20" 
+          : cn(width, height),
         isMinimized ? "pointer-events-none" : ""
       )}
       style={{ touchAction: 'none' }}

@@ -48,15 +48,15 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
   return (
     <div 
       className={cn(
-        "absolute left-1/2 -translate-x-1/2 h-20 bg-surface border-4 border-black flex items-center px-6 z-[9999] transition-all duration-500 w-11/12 max-w-6xl",
-        isAnyWindowOpen ? "-bottom-32 opacity-0 pointer-events-none" : "bottom-6 shadow-[8px_8px_0px_0px_#000]"
+        "absolute left-1/2 -translate-x-1/2 h-16 sm:h-20 bg-surface border-4 border-black flex items-center px-2 sm:px-6 z-[9999] transition-all duration-500 w-[96%] sm:w-11/12 max-w-6xl",
+        isAnyWindowOpen ? "-bottom-32 opacity-0 pointer-events-none" : "bottom-4 sm:bottom-6 shadow-[8px_8px_0px_0px_#000]"
       )} 
       ref={startMenuRef}
     >
       
       {/* Start Menu Popup */}
       {isStartMenuOpen && (
-        <div className="absolute bottom-28 left-0 w-72 bg-surface border-4 border-black shadow-[8px_8px_0px_0px_#000] flex flex-col p-2 mb-2 z-[10000]">
+        <div className="absolute bottom-20 sm:bottom-28 left-0 w-full sm:w-72 bg-surface border-4 border-black shadow-[8px_8px_0px_0px_#000] flex flex-col p-2 mb-2 z-[10000] max-w-[calc(100vw-16px)]">
           <div className="bg-primary-yellow border-2 border-black text-black font-black p-4 mb-2 flex items-center gap-3 text-lg">
             <div className="w-10 h-10 border-2 border-black bg-white overflow-hidden shadow-[2px_2px_0px_0px_#000]">
               <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
@@ -102,7 +102,7 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
       <button 
         onClick={() => setIsStartMenuOpen(!isStartMenuOpen)}
         className={cn(
-          "flex items-center justify-center w-14 h-14 bg-primary-red border-2 border-black shadow-[2px_2px_0px_0px_#000] transition-all mr-8 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shrink-0",
+          "flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-primary-red border-2 border-black shadow-[2px_2px_0px_0px_#000] transition-all mr-2 sm:mr-8 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shrink-0",
           isStartMenuOpen ? "translate-x-[2px] translate-y-[2px] shadow-none" : ""
         )}
       >
@@ -112,7 +112,7 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
       </button>
 
       {/* Window Tasks */}
-      <div className="flex items-center gap-4 overflow-x-auto mx-4 flex-1">
+      <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto mx-2 flex-1 custom-scrollbar">
         {windows.filter(w => w.isOpen).map((w) => {
           const Icon = () => {
             switch (w.id) {
@@ -153,7 +153,7 @@ export function Taskbar({ windows, toggleMinimize, onOpenWindow }: TaskbarProps)
       </div>
 
       {/* Clock */}
-      <div className="ml-auto flex items-center gap-4 pl-8 border-l-2 border-black h-full shrink-0">
+      <div className="hidden sm:flex ml-auto items-center gap-4 pl-8 border-l-2 border-black h-full shrink-0">
         <div className="flex items-center justify-center px-6 py-3 border-2 border-black bg-primary-green text-black font-black text-base tabular-nums shadow-[2px_2px_0px_0px_#000]">
           {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>

@@ -39,17 +39,17 @@ export function InventoryWindow() {
           <div className="absolute top-0 right-0 bg-primary-green text-black px-2 py-1 text-xs font-bold border-b-2 border-l-2 border-black">TERMINAL</div>
           <div className="mb-6 text-sm font-bold">guest@smartsphere:~/inventory$ ./request_item.sh</div>
           <form className="flex flex-col gap-5 text-sm" onSubmit={(e) => { e.preventDefault(); alert('Request submitted to core team.'); setShowTerminal(false); }}>
-            <div className="flex items-center gap-4">
-              <span className="w-36 font-bold uppercase">Item ID:</span>
-              <input type="text" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black flex-1 text-black px-4 py-2 font-bold transition-colors" required />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <span className="w-full sm:w-36 font-bold uppercase">Item ID:</span>
+              <input type="text" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black w-full sm:flex-1 text-black px-4 py-2 font-bold transition-colors" required />
             </div>
-            <div className="flex items-center gap-4">
-              <span className="w-36 font-bold uppercase">Duration (Days):</span>
-              <input type="number" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black flex-1 text-black px-4 py-2 font-bold transition-colors" required />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <span className="w-full sm:w-36 font-bold uppercase">Duration (Days):</span>
+              <input type="number" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black w-full sm:flex-1 text-black px-4 py-2 font-bold transition-colors" required />
             </div>
-            <div className="flex items-center gap-4">
-              <span className="w-36 font-bold uppercase">Project Purpose:</span>
-              <input type="text" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black flex-1 text-black px-4 py-2 font-bold transition-colors" required />
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <span className="w-full sm:w-36 font-bold uppercase">Project Purpose:</span>
+              <input type="text" className="bg-white border-2 border-primary-green focus:outline-none focus:bg-primary-green focus:text-black w-full sm:flex-1 text-black px-4 py-2 font-bold transition-colors" required />
             </div>
             <button type="submit" className="mt-4 self-start bg-primary-green border-2 border-primary-green text-black px-8 py-3 font-black uppercase hover:bg-white transition-colors shadow-[4px_4px_0px_0px_var(--color-primary-green)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
               Submit Request
