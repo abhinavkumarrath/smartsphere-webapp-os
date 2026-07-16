@@ -70,7 +70,7 @@ export function WindowContainer({
       className={cn(
         "absolute flex flex-col retro-window pointer-events-auto",
         effectiveMaximized 
-          ? "inset-2 sm:inset-4 !w-auto !h-auto max-w-none mb-16 sm:mb-20" 
+          ? "inset-2 sm:inset-4 !w-auto !h-auto max-w-none bottom-20 sm:bottom-28" 
           : cn(width, height),
         isMinimized ? "pointer-events-none" : ""
       )}
