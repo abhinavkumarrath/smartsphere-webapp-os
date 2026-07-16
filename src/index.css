@@ -42,36 +42,36 @@
 /* Theme switching overrides */
 [data-theme="hacker-green"] {
   --bg-main: #E2F0E5;
+  --bg-surface: #F4FAF6;
   --accent-blue: var(--accent-green);
+  --accent-red: var(--accent-green);
+  --accent-yellow: var(--accent-green);
   --border-dark: #0A2E1C;
 }
 [data-theme="synthwave-pink"] {
   --bg-main: #F0E1E6;
-  --accent-blue: #F23C34;
+  --bg-surface: #FAF4F6;
+  --accent-blue: #FF3B8D;
+  --accent-green: #FF3B8D;
+  --accent-red: #FF3B8D;
+  --accent-yellow: #FF3B8D;
   --border-dark: #2E0A16;
 }
 [data-theme="retro-amber"] {
   --bg-main: #FFF8E7;
+  --bg-surface: #FFFCF4;
   --accent-blue: var(--accent-yellow);
+  --accent-green: var(--accent-yellow);
+  --accent-red: var(--accent-yellow);
   --border-dark: #2E220A;
 }
 [data-theme="cyber-cyan"] {
   --bg-main: #F0EBE1;
+  --bg-surface: #FFFFFF;
   --accent-blue: #3061FF;
-}
-
-/* CRT Scanline Overlay */
-.crt-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9999;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-  background-size: 100% 4px;
-  opacity: 0.8;
+  --accent-green: #29A873;
+  --accent-red: #F23C34;
+  --accent-yellow: #FFC22E;
 }
 
 @layer base {

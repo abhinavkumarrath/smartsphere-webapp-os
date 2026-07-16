@@ -5,24 +5,20 @@ type ColorTheme = 'cyber-cyan' | 'hacker-green' | 'synthwave-pink' | 'retro-ambe
 interface SettingsContextType {
   colorTheme: ColorTheme;
   setColorTheme: (theme: ColorTheme) => void;
-  crtEnabled: boolean;
-  setCrtEnabled: (enabled: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [colorTheme, setColorTheme] = useState<ColorTheme>('cyber-cyan');
-  const [crtEnabled, setCrtEnabled] = useState(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', colorTheme);
   }, [colorTheme]);
 
   return (
-    <SettingsContext.Provider value={{ colorTheme, setColorTheme, crtEnabled, setCrtEnabled }}>
+    <SettingsContext.Provider value={{ colorTheme, setColorTheme }}>
       {children}
-      {crtEnabled && <div className="crt-overlay" />}
     </SettingsContext.Provider>
   );
 }

@@ -2,7 +2,7 @@ import { useSettings } from './SettingsContext';
 import { Monitor, Palette } from 'lucide-react';
 
 export function ControlPanel() {
-  const { colorTheme, setColorTheme, crtEnabled, setCrtEnabled } = useSettings();
+  const { colorTheme, setColorTheme } = useSettings();
 
   const themes = [
     { id: 'cyber-cyan', name: 'Blue', color: '#3061FF' },
@@ -47,30 +47,6 @@ export function ControlPanel() {
           </div>
         </div>
 
-        {/* Display / Effects */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 text-sm font-black text-black uppercase tracking-wider bg-white border-2 border-black px-3 py-1 w-max shadow-[4px_4px_0px_0px_#000]">
-            <Monitor size={18} strokeWidth={2.5} /> Display Effects
-          </div>
-          
-          <div className="flex items-center justify-between p-4 bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000] mt-2">
-            <div>
-              <div className="font-black text-lg">CRT Scanline Overlay</div>
-              <div className="text-sm font-bold text-gray-600">Simulate a retro cathode-ray tube monitor</div>
-            </div>
-            <button
-              onClick={() => setCrtEnabled(!crtEnabled)}
-              className={`relative inline-flex h-8 w-14 items-center border-4 border-black transition-colors shadow-[2px_2px_0px_0px_#000] ${
-                crtEnabled ? 'bg-primary-green' : 'bg-gray-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-6 w-6 transform bg-white border-4 border-black transition-transform ${
-                  crtEnabled ? 'translate-x-6' : 'translate-x-0'
-                }`}
-              />
-            </button>
-          </div>
         </div>
         
       </div>
