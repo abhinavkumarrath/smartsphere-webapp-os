@@ -5,10 +5,10 @@ export function ControlPanel() {
   const { colorTheme, setColorTheme, crtEnabled, setCrtEnabled } = useSettings();
 
   const themes = [
-    { id: 'cyber-cyan', name: 'Cool Blue', color: '#3061FF' },
-    { id: 'hacker-green', name: 'Go Green', color: '#29A873' },
-    { id: 'synthwave-pink', name: 'Rad Red', color: '#F23C34' },
-    { id: 'retro-amber', name: 'Yell-oh', color: '#FFC22E' }
+    { id: 'cyber-cyan', name: 'Blue', color: '#3061FF' },
+    { id: 'hacker-green', name: 'Green', color: '#29A873' },
+    { id: 'synthwave-pink', name: 'Red', color: '#F23C34' },
+    { id: 'retro-amber', name: 'Yellow', color: '#FFC22E' }
   ] as const;
 
   return (

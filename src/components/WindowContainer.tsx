@@ -33,7 +33,7 @@ export function WindowContainer({
   onMinimize,
   onFocus
 }: WindowContainerProps) {
-  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(true);
   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
 
   useEffect(() => {
