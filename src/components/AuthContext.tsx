@@ -43,6 +43,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('smartsphere_user');
+    localStorage.removeItem('smartsphere_is_logged_in');
+    window.location.reload();
   };
 
   return (

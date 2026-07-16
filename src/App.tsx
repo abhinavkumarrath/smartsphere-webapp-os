@@ -20,7 +20,14 @@ import { Music, Calendar, Gamepad2, UserCircle2 } from 'lucide-react';
 
 function App() {
   const [isBooting, setIsBooting] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('smartsphere_is_logged_in') === 'true';
+  });
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem('smartsphere_is_logged_in', 'true');
+  };
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [windows, setWindows] = useState<WindowState[]>([
     { id: 'about', title: 'ABOUT_CLUB', isOpen: false, isMinimized: false, isActive: false },
@@ -97,7 +104,7 @@ function App() {
       {isBooting ? (
         <BootScreen onComplete={() => setIsBooting(false)} />
       ) : !isLoggedIn ? (
-        <LoginScreen onLogin={() => setIsLoggedIn(true)} />
+        <LoginScreen onLogin={handleLogin} />
       ) : (
         <>
           <AnimatedIoTBackground />
