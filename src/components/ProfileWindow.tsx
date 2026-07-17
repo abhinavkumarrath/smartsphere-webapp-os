@@ -1,8 +1,8 @@
 import { useAuth } from './AuthContext';
-import { LogOut, UserCircle2, Award, Terminal, Code2, Cpu, Loader2 } from 'lucide-react';
+import { LogOut, UserCircle2, Award, Terminal, Code2, Cpu, Loader2, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { AdminDashboard } from './AdminDashboard';
 import { CertificateModal } from './CertificateModal';
 
@@ -56,6 +56,18 @@ export function ProfileWindow() {
     } catch (err) {
       console.error('Login Failed', err);
       setIsVerifying(false);
+    }
+  };
+
+  const handleDeleteCertificate = async (certId: string) => {
+    if (!user) return;
+    if (!confirm('Are you sure you want to delete this certificate?')) return;
+    try {
+      await deleteDoc(doc(db, 'users', user.id, 'certificates', certId));
+      setCertificates(prev => prev.filter(c => c.id !== certId));
+    } catch (err) {
+      console.error("Failed to delete certificate", err);
+      alert("Failed to delete certificate.");
     }
   };
 
@@ -169,12 +181,23 @@ export function ProfileWindow() {
                     <h4 className="font-bold text-lg leading-tight truncate">{cert.title}</h4>
                     <p className="text-sm font-bold text-gray-500 mt-1 uppercase tracking-wider">{cert.date}</p>
                   </div>
-                  <button 
-                    onClick={() => setSelectedCertificate(cert)}
-                    className="p-2 border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors text-xs font-bold uppercase shrink-0"
-                  >
-                    View
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => setSelectedCertificate(cert)}
+                      className="p-2 border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors text-xs font-bold uppercase shrink-0"
+                    >
+                      View
+                    </button>
+                    {isCoreTeam && (
+                      <button
+                        onClick={() => handleDeleteCertificate(cert.id)}
+                        className="p-2 border-2 border-black bg-primary-red text-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors flex items-center justify-center shrink-0"
+                        title="Remove Certificate"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

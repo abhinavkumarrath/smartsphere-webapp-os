@@ -33,8 +33,18 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
       const canvas = await html2canvas(certificateRef.current, {
         scale: 2, 
         useCORS: true, 
-        logging: false,
-        backgroundColor: '#0f172a' // Matches slate-900
+        logging: true, // Enable logging to see errors if it fails again
+        backgroundColor: '#0f172a', // Matches slate-900
+        onclone: (clonedDoc) => {
+          // html2canvas has a known bug where it hangs infinitely on background-clip: text
+          const sig = clonedDoc.getElementById('signature-text');
+          if (sig) {
+            sig.style.background = 'none';
+            sig.style.webkitBackgroundClip = 'initial';
+            sig.style.webkitTextFillColor = 'initial';
+            sig.style.color = '#d4af37';
+          }
+        }
       });
       
       const imgData = canvas.toDataURL('image/png');
@@ -49,6 +59,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
       pdf.save(`${userName.replace(/\s+/g, '_')}_Certificate.pdf`);
     } catch (err) {
       console.error("Error generating PDF:", err);
+      alert("Failed to generate PDF. Please try again.");
     } finally {
       if (wrapper) wrapper.style.transform = originalTransform;
       setIsDownloading(false);
@@ -162,6 +173,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                 <div className="flex flex-col items-center w-64">
                   {/* Cursive Signature matching user request */}
                   <span 
+                    id="signature-text"
                     className="text-6xl mb-2 -rotate-6 opacity-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pt-4 pb-2 px-2 inline-block leading-none" 
                     style={{ 
                       fontFamily: "'Great Vibes', cursive",
