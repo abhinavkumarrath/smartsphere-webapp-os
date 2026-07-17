@@ -140,7 +140,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                   For outstanding participation and successfully achieving the title of 
                 </p>
                 <div className="border-y border-[#334155]/50 py-4 w-full max-w-[600px] mb-6">
-                  <span className="block text-5xl font-serif font-bold text-[#d4af37] tracking-wider uppercase drop-shadow-lg">{certificate.title}</span>
+                  <span className="block text-4xl font-serif font-bold text-[#d4af37] tracking-wider uppercase drop-shadow-lg">{certificate.title}</span>
                 </div>
 
                 {certificate.occasion && (
@@ -162,7 +162,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                 <div className="flex flex-col items-center w-64">
                   {/* Cursive Signature matching user request */}
                   <span 
-                    className="text-6xl mb-2 -rotate-6 opacity-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
+                    className="text-6xl mb-2 -rotate-6 opacity-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pt-4 pb-2 px-2 inline-block leading-none" 
                     style={{ 
                       fontFamily: "'Great Vibes', cursive",
                       background: "linear-gradient(135deg, #bf953f 0%, #fcf6ba 40%, #b38728 80%, #fbf5b7 100%)",
