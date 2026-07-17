@@ -149,19 +149,17 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                   </div>
                 </div>
 
-                {/* Center Badge */}
-                <div className="relative flex items-center justify-center group mb-4">
-                  <div className="absolute inset-0 bg-[#d4af37] rounded-full blur-md opacity-30"></div>
-                  <div className="relative w-[90px] h-[90px] bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728] rounded-full flex items-center justify-center border-[3px] border-slate-900 shadow-2xl">
-                    <span className="font-black text-2xl text-slate-900">SS</span>
-                  </div>
-                </div>
-
                 <div className="flex flex-col items-center w-64">
                   {/* Cursive Signature */}
                   <span 
-                    className="text-[#d4af37] text-4xl mb-1 -rotate-6 opacity-90 drop-shadow-sm" 
-                    style={{ fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive" }}
+                    className="text-4xl mb-1 -rotate-6 opacity-90 drop-shadow-md" 
+                    style={{ 
+                      fontFamily: "'Pinyon Script', 'Alex Brush', 'Great Vibes', 'Brush Script MT', 'Lucida Handwriting', cursive",
+                      fontWeight: 300,
+                      background: "linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent"
+                    }}
                   >
                     SmartSphere
                   </span>
