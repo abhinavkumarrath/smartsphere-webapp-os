@@ -13,6 +13,7 @@ export function AdminDashboard() {
   const [selectedUserId, setSelectedUserId] = useState('');
   const [certTitle, setCertTitle] = useState('');
   const [certDate, setCertDate] = useState('');
+  const [certOccasion, setCertOccasion] = useState('');
   const [certIcon, setCertIcon] = useState('Award');
   const [certColor, setCertColor] = useState('bg-primary-yellow');
 
@@ -46,6 +47,7 @@ export function AdminDashboard() {
       await addDoc(certRef, {
         title: certTitle,
         date: certDate,
+        occasion: certOccasion,
         icon: certIcon,
         color: certColor,
         createdAt: new Date().toISOString()
@@ -54,6 +56,7 @@ export function AdminDashboard() {
       setSuccessMsg(`Certificate assigned successfully!`);
       setCertTitle('');
       setCertDate('');
+      setCertOccasion('');
       
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
@@ -127,6 +130,17 @@ export function AdminDashboard() {
                 className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block font-black text-xs uppercase tracking-wider mb-1">Occasion / Reason</label>
+            <input 
+              type="text" 
+              value={certOccasion}
+              onChange={(e) => setCertOccasion(e.target.value)}
+              placeholder="e.g. For outstanding performance in Web Dev..."
+              className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

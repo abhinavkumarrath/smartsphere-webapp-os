@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
 import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { AdminDashboard } from './AdminDashboard';
+import { CertificateModal } from './CertificateModal';
 
 function getIconComponent(iconName: string, className: string) {
   switch (iconName) {
@@ -19,6 +20,7 @@ export function ProfileWindow() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [certificates, setCertificates] = useState<any[]>([]);
   const [isLoadingCerts, setIsLoadingCerts] = useState(true);
+  const [selectedCertificate, setSelectedCertificate] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchCerts() {
@@ -167,7 +169,10 @@ export function ProfileWindow() {
                     <h4 className="font-bold text-lg leading-tight truncate">{cert.title}</h4>
                     <p className="text-sm font-bold text-gray-500 mt-1 uppercase tracking-wider">{cert.date}</p>
                   </div>
-                  <button className="p-2 border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors text-xs font-bold uppercase shrink-0">
+                  <button 
+                    onClick={() => setSelectedCertificate(cert)}
+                    className="p-2 border-2 border-black bg-white shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors text-xs font-bold uppercase shrink-0"
+                  >
                     View
                   </button>
                 </div>
@@ -176,6 +181,13 @@ export function ProfileWindow() {
           )}
         </div>
       </div>
+
+      <CertificateModal 
+        isOpen={!!selectedCertificate} 
+        onClose={() => setSelectedCertificate(null)}
+        userName={user.name}
+        certificate={selectedCertificate || { title: '', date: '', occasion: '' }}
+      />
     </div>
   );
 }
