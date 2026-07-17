@@ -50,7 +50,7 @@ const TEAM_CATEGORIES = [
   {
     title: "Coordinators",
     description: "Support the core team, manage logistics, and help execute club initiatives seamlessly.",
-    vacant: 3,
+    vacant: 2,
     members: []
   }
 ];
