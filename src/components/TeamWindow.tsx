@@ -18,7 +18,6 @@ const TEAM_CATEGORIES = [
   },
   {
     title: "Technical Co-Leads & Mentors",
-    description: "Conduct technical sessions, prepare roadmaps, mentor members, guide projects, and lead hackathons.",
     members: [
       { id: 'abhinav', name: 'Abhinav Kumar Rath', role: 'Technical Co-Lead', skills: ['Engineering', 'Hackathons'], color: 'bg-primary-red', linkedin: 'https://www.linkedin.com/in/abhinavkumarrath' },
       { id: 'utkarsh', name: 'Utkarsh Trivedi', role: 'Technical Co-Lead', skills: ['Mentorship', 'Architecture'], color: 'bg-primary-cyan', linkedin: 'https://www.linkedin.com/in/utkarsh-trivedi-6a2165329/' },
@@ -49,7 +48,6 @@ const TEAM_CATEGORIES = [
   },
   {
     title: "Coordinators",
-    description: "Support the core team, manage logistics, and help execute club initiatives seamlessly.",
     vacant: 2,
     members: []
   }
