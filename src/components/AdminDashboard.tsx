@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { Shield, Loader2, CheckCircle2, CalendarPlus } from 'lucide-react';
+import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc, query, orderBy } from 'firebase/firestore';
+import { Shield, Loader2, CheckCircle2, CalendarPlus, Trash2, Edit2 } from 'lucide-react';
 import type { UserProfile } from './AuthContext';
 
 export function AdminDashboard() {
@@ -26,6 +26,10 @@ export function AdminDashboard() {
   const [eventColor, setEventColor] = useState('bg-primary-cyan');
   const [isSubmittingEvent, setIsSubmittingEvent] = useState(false);
   const [eventSuccessMsg, setEventSuccessMsg] = useState('');
+  
+  // Manage Events State
+  const [events, setEvents] = useState<any[]>([]);
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -38,11 +42,28 @@ export function AdminDashboard() {
         setUsers(usersList);
       } catch (err) {
         console.error("Failed to fetch users", err);
+      }
+    }
+
+    async function fetchEvents() {
+      try {
+        const eventsRef = collection(db, 'events');
+        const q = query(eventsRef, orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const eventsList: any[] = [];
+        querySnapshot.forEach((docSnap) => {
+          eventsList.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        setEvents(eventsList);
+      } catch (err) {
+        console.error("Failed to fetch events", err);
       } finally {
         setIsLoading(false);
       }
     }
+
     fetchUsers();
+    fetchEvents();
   }, []);
 
   const handleAssignCertificate = async (e: React.FormEvent) => {
@@ -84,18 +105,37 @@ export function AdminDashboard() {
     setEventSuccessMsg('');
 
     try {
-      const eventsRef = collection(db, 'events');
-      await addDoc(eventsRef, {
-        title: eventTitle,
-        date: eventDate,
-        time: eventTime,
-        location: eventLocation,
-        type: eventType,
-        color: eventColor,
-        createdAt: new Date().toISOString()
-      });
+      if (editingEventId) {
+        const eventRef = doc(db, 'events', editingEventId);
+        await updateDoc(eventRef, {
+          title: eventTitle,
+          date: eventDate,
+          time: eventTime,
+          location: eventLocation,
+          type: eventType,
+          color: eventColor
+        });
+        setEventSuccessMsg(`Event updated successfully!`);
+        setEvents(events.map(ev => ev.id === editingEventId ? {
+          ...ev, title: eventTitle, date: eventDate, time: eventTime, location: eventLocation, type: eventType, color: eventColor
+        } : ev));
+        setEditingEventId(null);
+      } else {
+        const eventsRef = collection(db, 'events');
+        const newEvent = {
+          title: eventTitle,
+          date: eventDate,
+          time: eventTime,
+          location: eventLocation,
+          type: eventType,
+          color: eventColor,
+          createdAt: new Date().toISOString()
+        };
+        const docRef = await addDoc(eventsRef, newEvent);
+        setEventSuccessMsg(`Event created successfully!`);
+        setEvents([{ id: docRef.id, ...newEvent }, ...events]);
+      }
       
-      setEventSuccessMsg(`Event created successfully!`);
       setEventTitle('');
       setEventDate('');
       setEventTime('');
@@ -106,6 +146,30 @@ export function AdminDashboard() {
       console.error("Failed to create event", err);
     } finally {
       setIsSubmittingEvent(false);
+    }
+  };
+
+  const handleEditEvent = (event: any) => {
+    setEventTitle(event.title);
+    setEventDate(event.date);
+    setEventTime(event.time);
+    setEventLocation(event.location);
+    setEventType(event.type);
+    setEventColor(event.color);
+    setEditingEventId(event.id);
+    
+    // Scroll to the event creation form
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  };
+
+  const handleDeleteEvent = async (eventId: string) => {
+    if (!confirm("Are you sure you want to delete this event?")) return;
+    try {
+      await deleteDoc(doc(db, 'events', eventId));
+      setEvents(events.filter(ev => ev.id !== eventId));
+    } catch (err) {
+      console.error("Failed to delete event", err);
+      alert("Failed to delete event");
     }
   };
 
@@ -228,11 +292,15 @@ export function AdminDashboard() {
       {/* Event Creation Section */}
       <div className="bg-black text-white p-3 flex items-center gap-2 border-t-4 border-black mt-8">
         <CalendarPlus size={20} className="text-primary-cyan" />
-        <h3 className="font-black uppercase tracking-widest text-sm">Create Club Event</h3>
+        <h3 className="font-black uppercase tracking-widest text-sm">
+          {editingEventId ? "Edit Club Event" : "Create Club Event"}
+        </h3>
       </div>
       
       <div className="p-5">
-        <p className="font-bold text-gray-600 mb-4 text-sm">Publish a new event to the club calendar.</p>
+        <p className="font-bold text-gray-600 mb-4 text-sm">
+          {editingEventId ? "Update the details of the selected event." : "Publish a new event to the club calendar."}
+        </p>
         
         {eventSuccessMsg && (
           <div className="bg-primary-green border-2 border-black p-2 mb-4 flex items-center gap-2 font-bold text-sm shadow-[2px_2px_0px_0px_#000]">
@@ -320,11 +388,64 @@ export function AdminDashboard() {
           <button 
             type="submit"
             disabled={isSubmittingEvent}
-            className="w-full mt-2 bg-black text-white border-4 border-black py-3 font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#primary-cyan] hover:bg-gray-800 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all disabled:opacity-50 flex items-center justify-center"
+            className={`w-full mt-2 text-white border-4 border-black py-3 font-black uppercase tracking-widest hover:bg-gray-800 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all disabled:opacity-50 flex items-center justify-center ${editingEventId ? 'bg-primary-yellow text-black shadow-[4px_4px_0px_0px_#000] hover:text-white' : 'bg-black shadow-[4px_4px_0px_0px_#primary-cyan]'}`}
           >
-            {isSubmittingEvent ? <Loader2 className="animate-spin" /> : "Publish Event"}
+            {isSubmittingEvent ? <Loader2 className="animate-spin" /> : (editingEventId ? "Update Event" : "Publish Event")}
           </button>
+          
+          {editingEventId && (
+            <button 
+              type="button"
+              onClick={() => {
+                setEditingEventId(null);
+                setEventTitle('');
+                setEventDate('');
+                setEventTime('');
+                setEventLocation('');
+              }}
+              className="w-full bg-white text-black border-4 border-black py-3 font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#000] hover:bg-gray-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center"
+            >
+              Cancel Edit
+            </button>
+          )}
         </form>
+      </div>
+
+      {/* Manage Existing Events */}
+      <div className="bg-black text-white p-3 flex items-center gap-2 border-y-4 border-black mt-8">
+        <Shield size={20} className="text-primary-red" />
+        <h3 className="font-black uppercase tracking-widest text-sm">Manage Events</h3>
+      </div>
+      
+      <div className="p-5">
+        {events.length === 0 ? (
+          <p className="text-gray-500 font-bold italic">No events found.</p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {events.map((ev) => (
+              <div key={ev.id} className="border-2 border-black p-4 flex justify-between items-center shadow-[4px_4px_0px_0px_#000]">
+                <div>
+                  <h4 className="font-black uppercase">{ev.title}</h4>
+                  <p className="text-xs font-bold text-gray-600">{ev.date} @ {ev.time} | {ev.location}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => handleEditEvent(ev)}
+                    className="p-2 bg-primary-yellow border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteEvent(ev.id)}
+                    className="p-2 bg-primary-red border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-black hover:text-white transition-colors text-white"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
