@@ -6,7 +6,14 @@ const getLinkedInUsername = (url?: string) => {
   return match ? match[1] : '';
 };
 
-const TEAM_CATEGORIES = [
+type TeamCategory = {
+  title: string;
+  description?: string;
+  vacant?: number;
+  members: any[];
+};
+
+const TEAM_CATEGORIES: TeamCategory[] = [
   {
     title: "Founders & Leads",
     members: [
