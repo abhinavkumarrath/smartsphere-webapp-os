@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { auth, googleProvider } from '../lib/firebase';
+import { auth, googleProvider, db } from '../lib/firebase';
 import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export interface UserProfile {
   id: string;
@@ -27,16 +28,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: User | null) => {
       if (firebaseUser) {
-        setUser({
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName || 'Unknown User',
-          email: firebaseUser.email || '',
-          picture: firebaseUser.photoURL || '',
-          role: 'Club Member',
-          joinDate: new Date(firebaseUser.metadata.creationTime || Date.now()).toLocaleDateString()
-        });
+        try {
+          const userDocRef = doc(db, 'users', firebaseUser.uid);
+          const userDoc = await getDoc(userDocRef);
+          
+          if (userDoc.exists()) {
+            setUser({ id: firebaseUser.uid, ...userDoc.data() } as UserProfile);
+          } else {
+            const newProfile: Omit<UserProfile, 'id'> = {
+              name: firebaseUser.displayName || 'Unknown User',
+              email: firebaseUser.email || '',
+              picture: firebaseUser.photoURL || '',
+              role: 'Club Member',
+              joinDate: new Date(firebaseUser.metadata.creationTime || Date.now()).toLocaleDateString()
+            };
+            await setDoc(userDocRef, newProfile);
+            setUser({ id: firebaseUser.uid, ...newProfile });
+          }
+        } catch (error) {
+          console.error("Error fetching user profile from Firestore:", error);
+          setUser({
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName || 'Unknown User',
+            email: firebaseUser.email || '',
+            picture: firebaseUser.photoURL || '',
+            role: 'Club Member',
+            joinDate: new Date(firebaseUser.metadata.creationTime || Date.now()).toLocaleDateString()
+          });
+        }
       } else {
         setUser(null);
       }
