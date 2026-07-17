@@ -122,19 +122,19 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                   This is proudly presented to
                 </p>
 
-                <div className="relative w-full max-w-[700px] flex justify-center border-b border-[#334155] pb-4 mb-10">
-                  <h2 className="text-5xl font-bold text-white tracking-wide">
+                <div className="relative w-full max-w-[700px] flex justify-center border-b border-[#334155] pb-6 mb-10">
+                  <h2 className="text-6xl font-serif italic text-white tracking-widest drop-shadow-md">
                     {userName}
                   </h2>
                 </div>
 
-                <p className="text-[#cbd5e1] text-xl font-light max-w-[800px] leading-relaxed mb-4">
+                <p className="text-[#cbd5e1] text-lg font-medium max-w-[800px] leading-relaxed mb-4 uppercase tracking-widest">
                   For outstanding participation and successfully achieving the title of 
-                  <span className="block text-3xl font-bold text-primary-cyan mt-4 tracking-wide">{certificate.title}</span>
+                  <span className="block text-4xl font-serif font-bold text-primary-cyan mt-6 tracking-wide drop-shadow-sm normal-case">{certificate.title}</span>
                 </p>
 
                 {certificate.occasion && (
-                  <p className="text-[#94a3b8] italic text-lg max-w-[700px] mt-2">
+                  <p className="text-[#94a3b8] italic text-xl max-w-[700px] mt-4 font-serif">
                     "{certificate.occasion}"
                   </p>
                 )}
@@ -158,7 +158,13 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                 </div>
 
                 <div className="flex flex-col items-center w-64">
-                  <div className="h-[32px] mb-3 w-full" style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(148,163,184,0.1) 0%, transparent 70%)' }}></div>
+                  {/* Cursive Signature */}
+                  <span 
+                    className="text-[#d4af37] text-4xl mb-1 -rotate-6 opacity-90 drop-shadow-sm" 
+                    style={{ fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive" }}
+                  >
+                    SmartSphere
+                  </span>
                   <div className="w-full border-t border-[#475569] pt-3 text-center">
                     <span className="text-[#94a3b8] text-xs uppercase tracking-[0.2em]">SmartSphere Founder</span>
                   </div>
