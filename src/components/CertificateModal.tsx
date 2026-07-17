@@ -26,20 +26,21 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
 
     try {
       const canvas = await html2canvas(certificateRef.current, {
-        scale: 2, // Higher quality
-        useCORS: true, // Allow loading images
+        scale: 2, 
+        useCORS: true, 
+        logging: false,
+        backgroundColor: '#0f172a' // Matches slate-900
       });
       
       const imgData = canvas.toDataURL('image/png');
       
-      // Calculate aspect ratio for A4 landscape
       const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'px',
-        format: [canvas.width, canvas.height]
+        format: [1024, 720]
       });
       
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.addImage(imgData, 'PNG', 0, 0, 1024, 720);
       pdf.save(`${userName.replace(/\s+/g, '_')}_Certificate.pdf`);
     } catch (err) {
       console.error("Error generating PDF:", err);
@@ -49,102 +50,123 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      {/* Container to restrict max size on small screens but keep the certificate large enough to render clearly */}
-      <div className="relative w-full max-w-5xl max-h-[95vh] flex flex-col bg-surface-alt border-4 border-black shadow-[8px_8px_0px_0px_#fff]">
-        
-        {/* Header Bar */}
-        <div className="bg-black text-white p-4 flex justify-between items-center shrink-0">
-          <h2 className="font-black uppercase tracking-widest text-lg">Digital Certificate</h2>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/95 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+      
+      <div className="relative flex flex-col items-center w-full min-h-full">
+        {/* Actions Bar */}
+        <div className="w-full max-w-[1024px] flex justify-between items-center mb-6 shrink-0">
+          <h2 className="text-white font-black text-xl tracking-widest uppercase text-primary-cyan drop-shadow-md">
+            Certificate Preview
+          </h2>
           <div className="flex gap-4">
             <button 
               onClick={handleDownload}
               disabled={isDownloading}
-              className="flex items-center gap-2 bg-primary-cyan text-black px-4 py-2 font-bold uppercase hover:bg-white transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 bg-gradient-to-r from-primary-cyan to-blue-500 text-white px-6 py-2 rounded font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(0,255,255,0.4)] hover:shadow-[0_0_25px_rgba(0,255,255,0.8)] transition-all disabled:opacity-50"
             >
               {isDownloading ? <Loader2 className="animate-spin" size={20} /> : <Download size={20} />}
               {isDownloading ? 'Generating...' : 'Download PDF'}
             </button>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-white/20 transition-colors"
+              className="p-2 bg-white/10 rounded text-white hover:bg-white/20 transition-colors"
             >
               <X size={24} />
             </button>
           </div>
         </div>
 
-        {/* Scrollable area for the certificate preview */}
-        <div className="flex-1 overflow-auto p-4 md:p-8 flex items-center justify-center bg-gray-200">
-          
-          {/* THE CERTIFICATE TEMPLATE - Fixed size for consistent PDF rendering */}
+        {/* Scalable Container for responsiveness, but inner is strictly 1024x720 */}
+        <div 
+          className="shrink-0 origin-top flex items-center justify-center pb-12"
+          style={{ transform: 'scale(min(1, calc((100vw - 40px) / 1024)))' }}
+        >
+          {/* THE CERTIFICATE TEMPLATE */}
           <div 
             ref={certificateRef}
-            className="w-[1024px] h-[720px] bg-white relative p-16 flex flex-col justify-between shrink-0 shadow-xl overflow-hidden"
-            style={{ 
-              fontFamily: "'Inter', sans-serif",
-              border: "16px double #000"
-            }}
+            className="w-[1024px] h-[720px] relative p-[40px] bg-slate-900 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0"
+            style={{ fontFamily: "'Inter', sans-serif" }}
           >
-            {/* Background Pattern / Watermark (optional) */}
-            <div className="absolute inset-0 opacity-5 flex items-center justify-center pointer-events-none">
-              <div className="w-[800px] h-[800px] rounded-full border-[60px] border-black"></div>
-            </div>
+            {/* Outer Gold Border */}
+            <div className="absolute inset-[20px] border-[3px] border-[#d4af37] opacity-80 pointer-events-none z-10" />
+            <div className="absolute inset-[28px] border-[1px] border-[#d4af37] opacity-50 pointer-events-none z-10" />
 
-            {/* Top Logos */}
-            <div className="flex justify-between items-start z-10">
-              <img src="/ggits.png" alt="GGITS" className="h-28 object-contain" crossOrigin="anonymous" />
-              <img src="/logo.jpg" alt="SmartSphere" className="h-28 object-contain" crossOrigin="anonymous" />
-            </div>
+            {/* Premium Background Elements */}
+            <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] bg-primary-cyan/10 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-200px] right-[-200px] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-            {/* Content Body */}
-            <div className="flex-1 flex flex-col items-center justify-center text-center z-10 px-24">
-              <h1 className="text-6xl font-black uppercase tracking-tighter mb-4 text-black">
-                Certificate of Achievement
-              </h1>
+            {/* Corner Ornaments */}
+            <div className="absolute top-[30px] left-[30px] w-[40px] h-[40px] border-t-[3px] border-l-[3px] border-[#d4af37] z-20" />
+            <div className="absolute top-[30px] right-[30px] w-[40px] h-[40px] border-t-[3px] border-r-[3px] border-[#d4af37] z-20" />
+            <div className="absolute bottom-[30px] left-[30px] w-[40px] h-[40px] border-b-[3px] border-l-[3px] border-[#d4af37] z-20" />
+            <div className="absolute bottom-[30px] right-[30px] w-[40px] h-[40px] border-b-[3px] border-r-[3px] border-[#d4af37] z-20" />
+
+            {/* Content Container */}
+            <div className="relative z-30 w-full h-full flex flex-col items-center justify-between">
               
-              <p className="text-xl font-medium text-gray-600 tracking-widest uppercase mt-6 mb-8">
-                This is proudly presented to
-              </p>
-              
-              <h2 className="text-5xl font-black text-black border-b-4 border-black pb-2 px-12 mb-8 inline-block">
-                {userName}
-              </h2>
-              
-              <p className="text-lg font-bold text-gray-700 max-w-2xl leading-relaxed mb-4">
-                For successfully achieving the title of <strong className="text-black uppercase">{certificate.title}</strong>
-              </p>
-              
-              {certificate.occasion && (
-                <p className="text-lg text-gray-600 italic max-w-2xl">
-                  "{certificate.occasion}"
+              {/* Header Logos */}
+              <div className="w-full flex justify-between items-center px-12 pt-6">
+                {/* Note: crossOrigin removed to prevent CORS issues on localhost with html2canvas */}
+                <img src="/ggits.png" alt="College Logo" className="h-[90px] object-contain drop-shadow-xl" />
+                <img src="/logo.jpg" alt="SmartSphere Logo" className="h-[90px] object-contain drop-shadow-xl rounded-xl" />
+              </div>
+
+              {/* Main Content */}
+              <div className="flex flex-col items-center justify-center flex-1 w-full px-20 text-center">
+                
+                <h1 className="text-6xl font-serif text-[#d4af37] tracking-wider mb-6 drop-shadow-lg" style={{ fontVariant: 'small-caps' }}>
+                  Certificate of Achievement
+                </h1>
+
+                <p className="text-[#94a3b8] tracking-[0.3em] uppercase text-sm mb-12">
+                  This is proudly presented to
                 </p>
-              )}
-            </div>
 
-            {/* Bottom Signatures & Date */}
-            <div className="flex justify-between items-end z-10 pt-8 border-t-2 border-dashed border-gray-300 mt-4">
-              <div className="text-center w-64">
-                <p className="text-2xl font-bold font-serif mb-2">{certificate.date}</p>
-                <div className="border-t-2 border-black pt-2">
-                  <p className="font-bold uppercase tracking-widest text-xs">Date of Award</p>
+                <div className="relative w-full max-w-[700px] flex justify-center border-b border-[#334155] pb-4 mb-10">
+                  <h2 className="text-5xl font-bold text-white tracking-wide">
+                    {userName}
+                  </h2>
+                </div>
+
+                <p className="text-[#cbd5e1] text-xl font-light max-w-[800px] leading-relaxed mb-4">
+                  For outstanding participation and successfully achieving the title of 
+                  <span className="block text-3xl font-bold text-primary-cyan mt-4 tracking-wide">{certificate.title}</span>
+                </p>
+
+                {certificate.occasion && (
+                  <p className="text-[#94a3b8] italic text-lg max-w-[700px] mt-2">
+                    "{certificate.occasion}"
+                  </p>
+                )}
+              </div>
+
+              {/* Footer Signatures */}
+              <div className="w-full flex justify-between items-end px-20 pb-4">
+                <div className="flex flex-col items-center w-64">
+                  <span className="text-[#e2e8f0] text-xl mb-3 font-serif italic">{certificate.date}</span>
+                  <div className="w-full border-t border-[#475569] pt-3 text-center">
+                    <span className="text-[#94a3b8] text-xs uppercase tracking-[0.2em]">Date of Award</span>
+                  </div>
+                </div>
+
+                {/* Center Badge */}
+                <div className="relative flex items-center justify-center group mb-4">
+                  <div className="absolute inset-0 bg-[#d4af37] rounded-full blur-md opacity-30"></div>
+                  <div className="relative w-[90px] h-[90px] bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728] rounded-full flex items-center justify-center border-[3px] border-slate-900 shadow-2xl">
+                    <span className="font-black text-2xl text-slate-900">SS</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center w-64">
+                  <div className="h-[32px] mb-3 w-full" style={{ backgroundImage: 'radial-gradient(ellipse at center, rgba(148,163,184,0.1) 0%, transparent 70%)' }}></div>
+                  <div className="w-full border-t border-[#475569] pt-3 text-center">
+                    <span className="text-[#94a3b8] text-xs uppercase tracking-[0.2em]">SmartSphere Founder</span>
+                  </div>
                 </div>
               </div>
-              
-              {/* Optional Seal / Badge */}
-              <div className="w-24 h-24 bg-primary-yellow border-4 border-black rounded-full flex items-center justify-center shadow-[4px_4px_0px_0px_#000]">
-                <span className="font-black text-xl">SS</span>
-              </div>
 
-              <div className="text-center w-64">
-                <div className="h-12 border-b border-gray-400 mb-2"></div>
-                <div className="border-t-2 border-black pt-2">
-                  <p className="font-bold uppercase tracking-widest text-xs">SmartSphere Founder</p>
-                </div>
-              </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
