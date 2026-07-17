@@ -23,6 +23,11 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
   const handleDownload = async () => {
     if (!certificateRef.current) return;
     setIsDownloading(true);
+    
+    // Temporarily remove transform to prevent html2canvas offset/blank bugs
+    const wrapper = certificateRef.current.parentElement;
+    const originalTransform = wrapper ? wrapper.style.transform : '';
+    if (wrapper) wrapper.style.transform = 'none';
 
     try {
       const canvas = await html2canvas(certificateRef.current, {
@@ -45,12 +50,16 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
     } catch (err) {
       console.error("Error generating PDF:", err);
     } finally {
+      if (wrapper) wrapper.style.transform = originalTransform;
       setIsDownloading(false);
     }
   };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/95 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');`}
+      </style>
       
       <div className="relative flex flex-col items-center w-full min-h-full">
         {/* Actions Bar */}
@@ -78,7 +87,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
 
         {/* Scalable Container for responsiveness, but inner is strictly 1024x720 */}
         <div 
-          className="shrink-0 origin-top flex items-center justify-center pb-12"
+          className="shrink-0 origin-top flex items-center justify-center pb-12 transition-transform"
           style={{ transform: 'scale(min(1, calc((100vw - 40px) / 1024)))' }}
         >
           {/* THE CERTIFICATE TEMPLATE */}
@@ -106,7 +115,6 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
               
               {/* Header Logos */}
               <div className="w-full flex justify-between items-center px-12 pt-6">
-                {/* Note: crossOrigin removed to prevent CORS issues on localhost with html2canvas */}
                 <img src="/ggits.png" alt="College Logo" className="h-[90px] object-contain drop-shadow-xl" />
                 <img src="/logo.jpg" alt="SmartSphere Logo" className="h-[90px] object-contain drop-shadow-xl rounded-xl" />
               </div>
@@ -128,13 +136,15 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                   </h2>
                 </div>
 
-                <p className="text-[#cbd5e1] text-lg font-medium max-w-[800px] leading-relaxed mb-4 uppercase tracking-widest">
+                <p className="text-[#cbd5e1] text-lg font-light max-w-[800px] leading-relaxed mb-6 uppercase tracking-[0.2em]">
                   For outstanding participation and successfully achieving the title of 
-                  <span className="block text-4xl font-serif font-bold text-primary-cyan mt-6 tracking-wide drop-shadow-sm normal-case">{certificate.title}</span>
                 </p>
+                <div className="border-y border-[#334155]/50 py-4 w-full max-w-[600px] mb-6">
+                  <span className="block text-5xl font-serif font-bold text-[#d4af37] tracking-wider uppercase drop-shadow-lg">{certificate.title}</span>
+                </div>
 
                 {certificate.occasion && (
-                  <p className="text-[#94a3b8] italic text-xl max-w-[700px] mt-4 font-serif">
+                  <p className="text-[#94a3b8] italic text-xl max-w-[700px] font-serif">
                     "{certificate.occasion}"
                   </p>
                 )}
@@ -150,13 +160,12 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
                 </div>
 
                 <div className="flex flex-col items-center w-64">
-                  {/* Cursive Signature */}
+                  {/* Cursive Signature matching user request */}
                   <span 
-                    className="text-4xl mb-1 -rotate-6 opacity-90 drop-shadow-md" 
+                    className="text-6xl mb-2 -rotate-6 opacity-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" 
                     style={{ 
-                      fontFamily: "'Pinyon Script', 'Alex Brush', 'Great Vibes', 'Brush Script MT', 'Lucida Handwriting', cursive",
-                      fontWeight: 300,
-                      background: "linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7)",
+                      fontFamily: "'Great Vibes', cursive",
+                      background: "linear-gradient(135deg, #bf953f 0%, #fcf6ba 40%, #b38728 80%, #fbf5b7 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent"
                     }}
