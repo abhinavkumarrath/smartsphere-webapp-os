@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { X, Download, Loader2 } from 'lucide-react';
 
@@ -24,30 +24,20 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
     if (!certificateRef.current) return;
     setIsDownloading(true);
     
-    // Temporarily remove transform to prevent html2canvas offset/blank bugs
+    // Temporarily remove transform to prevent offset/blank bugs
     const wrapper = certificateRef.current.parentElement;
     const originalTransform = wrapper ? wrapper.style.transform : '';
     if (wrapper) wrapper.style.transform = 'none';
 
     try {
-      const canvas = await html2canvas(certificateRef.current, {
-        scale: 2, 
-        useCORS: true, 
-        logging: true, // Enable logging to see errors if it fails again
-        backgroundColor: '#0f172a', // Matches slate-900
-        onclone: (clonedDoc) => {
-          // html2canvas has a known bug where it hangs infinitely on background-clip: text
-          const sig = clonedDoc.getElementById('signature-text');
-          if (sig) {
-            sig.style.background = 'none';
-            sig.style.webkitBackgroundClip = 'initial';
-            sig.style.webkitTextFillColor = 'initial';
-            sig.style.color = '#d4af37';
-          }
+      const dataUrl = await toPng(certificateRef.current, {
+        quality: 1.0,
+        pixelRatio: 2,
+        backgroundColor: '#0f172a',
+        style: {
+          transform: 'none' // Ensure no internal scaling issues during capture
         }
       });
-      
-      const imgData = canvas.toDataURL('image/png');
       
       const pdf = new jsPDF({
         orientation: 'landscape',
@@ -55,7 +45,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
         format: [1024, 720]
       });
       
-      pdf.addImage(imgData, 'PNG', 0, 0, 1024, 720);
+      pdf.addImage(dataUrl, 'PNG', 0, 0, 1024, 720);
       pdf.save(`${userName.replace(/\s+/g, '_')}_Certificate.pdf`);
     } catch (err) {
       console.error("Error generating PDF:", err);
