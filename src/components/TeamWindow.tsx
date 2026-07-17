@@ -29,7 +29,8 @@ const TEAM_CATEGORIES = [
     members: [
       { id: 'atharv', name: 'Atharva Sahu', role: 'Media Lead', skills: ['Photography', 'Videography', 'Editing'], color: 'bg-primary-yellow', linkedin: 'https://www.linkedin.com/in/atharva-sahu-228a11346/' },
       { id: 'samarth', name: 'Samarth', role: 'Media Lead', skills: ['Videography', 'Social'], color: 'bg-primary-green' },
-    ]
+    ],
+    vacant: 1
   },
   {
     title: "Graphics",
@@ -44,6 +45,12 @@ const TEAM_CATEGORIES = [
   {
     title: "Events & Operations",
     vacant: 2,
+    members: []
+  },
+  {
+    title: "Coordinators",
+    description: "Support the core team, manage logistics, and help execute club initiatives seamlessly.",
+    vacant: 3,
     members: []
   }
 ];
