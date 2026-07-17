@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
-import { Shield, Loader2, CheckCircle2 } from 'lucide-react';
+import { Shield, Loader2, CheckCircle2, CalendarPlus } from 'lucide-react';
 import type { UserProfile } from './AuthContext';
 
 export function AdminDashboard() {
@@ -16,6 +16,16 @@ export function AdminDashboard() {
   const [certOccasion, setCertOccasion] = useState('');
   const [certIcon, setCertIcon] = useState('Award');
   const [certColor, setCertColor] = useState('bg-primary-yellow');
+
+  // Event State
+  const [eventTitle, setEventTitle] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [eventTime, setEventTime] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
+  const [eventType, setEventType] = useState('Meetup');
+  const [eventColor, setEventColor] = useState('bg-primary-cyan');
+  const [isSubmittingEvent, setIsSubmittingEvent] = useState(false);
+  const [eventSuccessMsg, setEventSuccessMsg] = useState('');
 
   useEffect(() => {
     async function fetchUsers() {
@@ -63,6 +73,39 @@ export function AdminDashboard() {
       console.error("Failed to assign certificate", err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleCreateEvent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!eventTitle || !eventDate || !eventTime || !eventLocation) return;
+
+    setIsSubmittingEvent(true);
+    setEventSuccessMsg('');
+
+    try {
+      const eventsRef = collection(db, 'events');
+      await addDoc(eventsRef, {
+        title: eventTitle,
+        date: eventDate,
+        time: eventTime,
+        location: eventLocation,
+        type: eventType,
+        color: eventColor,
+        createdAt: new Date().toISOString()
+      });
+      
+      setEventSuccessMsg(`Event created successfully!`);
+      setEventTitle('');
+      setEventDate('');
+      setEventTime('');
+      setEventLocation('');
+      
+      setTimeout(() => setEventSuccessMsg(''), 3000);
+    } catch (err) {
+      console.error("Failed to create event", err);
+    } finally {
+      setIsSubmittingEvent(false);
     }
   };
 
@@ -178,6 +221,108 @@ export function AdminDashboard() {
             className="w-full mt-2 bg-black text-white border-4 border-black py-3 font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#primary-cyan] hover:bg-gray-800 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all disabled:opacity-50 flex items-center justify-center"
           >
             {isSubmitting ? <Loader2 className="animate-spin" /> : "Assign Certificate"}
+          </button>
+        </form>
+      </div>
+      
+      {/* Event Creation Section */}
+      <div className="bg-black text-white p-3 flex items-center gap-2 border-t-4 border-black mt-8">
+        <CalendarPlus size={20} className="text-primary-cyan" />
+        <h3 className="font-black uppercase tracking-widest text-sm">Create Club Event</h3>
+      </div>
+      
+      <div className="p-5">
+        <p className="font-bold text-gray-600 mb-4 text-sm">Publish a new event to the club calendar.</p>
+        
+        {eventSuccessMsg && (
+          <div className="bg-primary-green border-2 border-black p-2 mb-4 flex items-center gap-2 font-bold text-sm shadow-[2px_2px_0px_0px_#000]">
+            <CheckCircle2 size={16} /> {eventSuccessMsg}
+          </div>
+        )}
+
+        <form onSubmit={handleCreateEvent} className="flex flex-col gap-4">
+          <div>
+            <label className="block font-black text-xs uppercase tracking-wider mb-1">Event Title</label>
+            <input 
+              type="text" 
+              value={eventTitle}
+              onChange={(e) => setEventTitle(e.target.value)}
+              required
+              placeholder="e.g. SmartSphere Orientation"
+              className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-1">Date</label>
+              <input 
+                type="date" 
+                value={eventDate}
+                onChange={(e) => setEventDate(e.target.value)}
+                required
+                className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+              />
+            </div>
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-1">Time</label>
+              <input 
+                type="time" 
+                value={eventTime}
+                onChange={(e) => setEventTime(e.target.value)}
+                required
+                className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-black text-xs uppercase tracking-wider mb-1">Location</label>
+            <input 
+              type="text" 
+              value={eventLocation}
+              onChange={(e) => setEventLocation(e.target.value)}
+              required
+              placeholder="e.g. Main Auditorium"
+              className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-1">Event Type</label>
+              <select 
+                value={eventType}
+                onChange={(e) => setEventType(e.target.value)}
+                className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+              >
+                <option value="Meetup">Meetup</option>
+                <option value="Hackathon">Hackathon</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Competition">Competition</option>
+              </select>
+            </div>
+            <div>
+              <label className="block font-black text-xs uppercase tracking-wider mb-1">Color Theme</label>
+              <select 
+                value={eventColor}
+                onChange={(e) => setEventColor(e.target.value)}
+                className="w-full border-2 border-black p-2 font-bold bg-gray-50 focus:bg-white outline-none focus:ring-2 focus:ring-primary-cyan shadow-[2px_2px_0px_0px_#000]"
+              >
+                <option value="bg-primary-cyan">Cyan</option>
+                <option value="bg-primary-yellow">Yellow</option>
+                <option value="bg-primary-red">Red</option>
+                <option value="bg-primary-green">Green</option>
+              </select>
+            </div>
+          </div>
+
+          <button 
+            type="submit"
+            disabled={isSubmittingEvent}
+            className="w-full mt-2 bg-black text-white border-4 border-black py-3 font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#primary-cyan] hover:bg-gray-800 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all disabled:opacity-50 flex items-center justify-center"
+          >
+            {isSubmittingEvent ? <Loader2 className="animate-spin" /> : "Publish Event"}
           </button>
         </form>
       </div>

@@ -1,35 +1,80 @@
-import { Calendar, MapPin, Clock } from 'lucide-react';
+import { Calendar, MapPin, Clock, Plus, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { db } from '../lib/firebase';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+
+interface ClubEvent {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  type: string;
+  color: string;
+  createdAt: string;
+}
 
 export function CalendarApp() {
-  const events = [
-    {
-      id: 1,
-      title: "SmartSphere Orientation",
-      date: "2026-08-01",
-      time: "10:00 AM",
-      location: "Main Auditorium",
-      type: "Meetup",
-      color: "bg-primary-cyan"
-    },
-    {
-      id: 2,
-      title: "Hack The Future 4.0",
-      date: "2026-08-15",
-      time: "09:00 AM",
-      location: "Hardware Lab",
-      type: "Hackathon",
-      color: "bg-primary-red"
-    },
-    {
-      id: 3,
-      title: "AI & Robotics Workshop",
-      date: "2026-08-22",
-      time: "02:00 PM",
-      location: "Lab 402",
-      type: "Workshop",
-      color: "bg-primary-yellow"
+  const [events, setEvents] = useState<ClubEvent[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventsRef = collection(db, 'events');
+        const q = query(eventsRef, orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        
+        const fetchedEvents: ClubEvent[] = [];
+        querySnapshot.forEach((docSnap) => {
+          fetchedEvents.push({ id: docSnap.id, ...docSnap.data() } as ClubEvent);
+        });
+        
+        setEvents(fetchedEvents);
+      } catch (err) {
+        console.error("Failed to fetch events", err);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  ];
+
+    fetchEvents();
+  }, []);
+
+  const getGoogleCalendarUrl = (event: ClubEvent) => {
+    // Format date and time for Google Calendar (YYYYMMDDTHHmmssZ)
+    // For simplicity, we create a URL with text, dates, and details
+    
+    // Create a date object from the event date and time
+    try {
+      const dateTimeString = `${event.date}T${event.time}:00`;
+      const startDate = new Date(dateTimeString);
+      
+      // Assume event is 2 hours long
+      const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+      
+      const formatGCalDate = (date: Date) => {
+        return date.toISOString().replace(/-|:|\.\d\d\d/g, '');
+      };
+      
+      const dates = `${formatGCalDate(startDate)}/${formatGCalDate(endDate)}`;
+      const details = `SmartSphere Club Event: ${event.type}`;
+      
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: event.title,
+        dates: dates,
+        details: details,
+        location: event.location,
+      });
+      
+      return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    } catch (err) {
+      console.error("Date formatting error", err);
+      // Fallback
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}`;
+    }
+  };
 
   return (
     <div className="text-black h-full flex flex-col font-sans min-h-[400px] bg-white">
@@ -44,8 +89,13 @@ export function CalendarApp() {
       </div>
       
       <div className="flex-1 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-6 bg-surface-alt">
-        {events.map((event) => (
-          <div key={event.id} className={`${event.color} border-4 border-black p-5 shadow-[8px_8px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_#000] transition-all group relative`}>
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-4 p-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_#000]">
+            <Loader2 className="animate-spin text-primary-cyan" size={32} />
+            <span className="font-black text-xl uppercase">Loading Events...</span>
+          </div>
+        ) : events.map((event) => (
+          <div key={event.id} className={`${event.color} border-4 border-black p-5 shadow-[8px_8px_0px_0px_#000] transition-all group relative`}>
             
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-2xl font-black text-black bg-white border-2 border-black px-3 py-1 shadow-[4px_4px_0px_0px_#000] uppercase tracking-tight">{event.title}</h3>
@@ -68,10 +118,20 @@ export function CalendarApp() {
                 <span className="uppercase">{event.location}</span>
               </div>
             </div>
+
+            <a 
+              href={getGoogleCalendarUrl(event)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center justify-center gap-2 w-full bg-white border-4 border-black py-2 font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
+            >
+              <Plus size={18} strokeWidth={3} />
+              Add to Google Calendar
+            </a>
           </div>
         ))}
         
-        {events.length === 0 && (
+        {!isLoading && events.length === 0 && (
           <div className="text-center font-black text-xl text-black mt-8 p-8 border-4 border-dashed border-black bg-white shadow-[8px_8px_0px_0px_#000] uppercase">
             No upcoming events found.
           </div>
