@@ -59,7 +59,7 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/95 p-4 md:p-8 overflow-y-auto custom-scrollbar">
       <style>
-        {`@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');`}
+        {`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap');`}
       </style>
       
       <div className="relative flex flex-col items-center w-full min-h-full">
@@ -94,8 +94,11 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
           {/* THE CERTIFICATE TEMPLATE */}
           <div 
             ref={certificateRef}
-            className="w-[1024px] h-[720px] relative p-[40px] bg-slate-900 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0"
-            style={{ fontFamily: "'Inter', sans-serif" }}
+            className="w-[1024px] h-[720px] relative p-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] shrink-0 bg-slate-900"
+            style={{ 
+              fontFamily: "'Inter', sans-serif",
+              background: "linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%)"
+            }}
           >
             {/* Outer Gold Border */}
             <div className="absolute inset-[20px] border-[3px] border-[#d4af37] opacity-80 pointer-events-none z-10" />
@@ -114,66 +117,50 @@ export function CertificateModal({ isOpen, onClose, userName, certificate }: Cer
             {/* Content Container */}
             <div className="relative z-30 w-full h-full flex flex-col items-center justify-between">
               
-              {/* Header Logos */}
+              {/* Header Logos - Removed the old text logo and put only GGITS here? Wait, the user wanted GGITS logo left, and SmartSphere logo right at the bottom. No, let's keep GGITS at top left, SmartSphere at bottom right as originally formatted, or I'll just follow the current layout */}
               <div className="w-full flex justify-between items-center px-12 pt-6">
-                <img src="/ggits.png" alt="College Logo" className="h-[90px] object-contain drop-shadow-xl" />
-                <img src="/logo.jpg" alt="SmartSphere Logo" className="h-[90px] object-contain drop-shadow-xl rounded-xl" />
+                <img src="/ggits.png" alt="College Logo" className="h-[120px] object-contain drop-shadow-xl" />
               </div>
 
               {/* Main Content */}
-              <div className="flex flex-col items-center justify-center flex-1 w-full px-20 text-center">
+              <div className="flex flex-col items-center justify-center flex-1 w-full px-16 text-center">
                 
-                <h1 className="text-6xl font-serif text-[#d4af37] tracking-wider mb-6 drop-shadow-lg" style={{ fontVariant: 'small-caps' }}>
+                <h1 className="text-7xl font-bold text-[#d4af37] tracking-widest mb-12 drop-shadow-lg" style={{ fontFamily: "'Cinzel', serif", fontVariant: 'small-caps' }}>
                   Certificate of Achievement
                 </h1>
 
-                <p className="text-[#94a3b8] tracking-[0.3em] uppercase text-sm mb-12">
-                  This is proudly presented to
-                </p>
-
-                <div className="relative w-full max-w-[700px] flex justify-center border-b border-[#334155] pb-6 mb-10">
-                  <h2 className="text-6xl font-serif italic text-white tracking-widest drop-shadow-md">
-                    {userName}
-                  </h2>
+                <div className="max-w-[850px] leading-[2.5] text-[#cbd5e1] font-light text-xl tracking-[0.05em]">
+                  This is proudly presented to <br/>
+                  
+                  <span className="inline-block px-6 py-2 mx-2 my-2 border-b-2 border-[#d4af37]/50 text-5xl italic text-white tracking-widest drop-shadow-md uppercase" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {userName.toUpperCase()}
+                  </span>
+                  <br/>
+                  
+                  for outstanding participation and successfully achieving the position of <br/>
+                  
+                  <span className="inline-block text-3xl font-bold text-[#d4af37] tracking-wider uppercase mt-3 mb-3" style={{ fontFamily: "'Cinzel', serif" }}>
+                    {certificate.title}
+                  </span> <br/>
+                  
+                  {certificate.occasion && (
+                    <>in the <span className="italic text-2xl text-white" style={{ fontFamily: "'Playfair Display', serif" }}>{certificate.occasion}</span>.</>
+                  )}
                 </div>
-
-                <p className="text-[#cbd5e1] text-lg font-light max-w-[800px] leading-relaxed mb-6 uppercase tracking-[0.2em]">
-                  For outstanding participation and successfully achieving the title of 
-                </p>
-                <div className="border-y border-[#334155]/50 py-4 w-full max-w-[600px] mb-6">
-                  <span className="block text-4xl font-serif font-bold text-[#d4af37] tracking-wider uppercase drop-shadow-lg">{certificate.title}</span>
-                </div>
-
-                {certificate.occasion && (
-                  <p className="text-[#94a3b8] italic text-xl max-w-[700px] font-serif">
-                    "{certificate.occasion}"
-                  </p>
-                )}
               </div>
 
               {/* Footer Signatures */}
               <div className="w-full flex justify-between items-end px-20 pb-4">
                 <div className="flex flex-col items-center w-64">
-                  <span className="text-[#e2e8f0] text-xl mb-3 font-serif italic">{certificate.date}</span>
+                  <span className="text-[#e2e8f0] text-2xl mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{certificate.date}</span>
                   <div className="w-full border-t border-[#475569] pt-3 text-center">
                     <span className="text-[#94a3b8] text-xs uppercase tracking-[0.2em]">Date of Award</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-center w-64">
-                  {/* Cursive Signature matching user request */}
-                  <span 
-                    id="signature-text"
-                    className="text-6xl mb-2 -rotate-6 opacity-90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] pt-4 pb-2 px-2 inline-block leading-none" 
-                    style={{ 
-                      fontFamily: "'Great Vibes', cursive",
-                      background: "linear-gradient(135deg, #bf953f 0%, #fcf6ba 40%, #b38728 80%, #fbf5b7 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent"
-                    }}
-                  >
-                    SmartSphere
-                  </span>
+                  {/* Real Image Logo instead of text */}
+                  <img src="/smartsphere.jpeg" alt="SmartSphere Logo" className="h-[120px] mb-2 object-contain rounded-xl drop-shadow-xl" />
                   <div className="w-full border-t border-[#475569] pt-3 text-center">
                     <span className="text-[#94a3b8] text-xs uppercase tracking-[0.2em]">SmartSphere Founder</span>
                   </div>
